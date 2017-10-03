@@ -14,6 +14,7 @@ public class Exclui {
     public static void excluirMilitar(String nome) throws SQLException, ClassNotFoundException{
         DAOMilitar.deletarMilitarCPF(nome);
         
+        
     }
     
 }
