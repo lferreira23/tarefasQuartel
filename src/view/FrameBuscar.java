@@ -1,13 +1,10 @@
 package view;
 
-
-import controller.Busca;
-import controller.Exclui;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import controller.MilitarController;
+import controller.Utils;
+import java.util.ArrayList;
+import model.EnumTarefa;
 import model.Militar;
-import javax.swing.JOptionPane;
 
 /**
  * Frame para fazer a Busca de Militar em relação as Tarefas efetuadas com os Botoes Tarefa, Tarefa nao Feita
@@ -17,31 +14,36 @@ import javax.swing.JOptionPane;
  */
 public class FrameBuscar extends javax.swing.JFrame {
     
-    FrameMenu menu = new FrameMenu();
-    Militar militar = new Militar();  
+    FrameMain parentFrame = null;
+    Militar militarAtual = null;
+    
+    private ArrayList<javax.swing.JCheckBox> checkBoxes = new ArrayList<>();
+    
+    private void initComponentLists() {
+        checkBoxes.add(chkDescascarBatatas);
+        checkBoxes.add(chkLimparBanheiro);
+        checkBoxes.add(chkLimparCozinha);
+        checkBoxes.add(chkCozinharAlmoco);
+        checkBoxes.add(chkCozinharJanta);
+        checkBoxes.add(chkAlimentarCavalos);
+        checkBoxes.add(chkLimparEstabulos);
+        checkBoxes.add(chkRecarregar);
+        checkBoxes.add(chkTrocarEncanamento);
+        checkBoxes.add(chkLevantarBandeira);
+    }
     
     public FrameBuscar() {
         initComponents();
     }
     
-    public FrameBuscar(FrameMenu militar){
+    public FrameBuscar(FrameMain militar){
          initComponents();
          setLocationRelativeTo(null);
-         menu = militar;
-        
+         parentFrame = militar;
     }
     //Limpa as Tarefas Do Militar colocando tudo em False.
     private void limparTarefas(Militar solda){
-        solda.setAlimentarCavalos(false);
-        solda.setCozinharArmoco(false);
-        solda.setCozinharJanta(false);
-        solda.setDescascar(false);
-        solda.setLevantarBandeira(false);
-        solda.setLimparEstabulos(false);
-        solda.setLimparBanheiro(false);
-        solda.setLimparCozinha(false);
-        solda.setRecarregarArmamento(false);
-        solda.setTrocarEncanamento(false);
+        //todo
     }
     
 
@@ -54,49 +56,29 @@ public class FrameBuscar extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
-        buttonGroup2 = new javax.swing.ButtonGroup();
-        buttonGroup3 = new javax.swing.ButtonGroup();
-        JpDadosMilitar = new javax.swing.JPanel();
-        LbCodigo = new javax.swing.JLabel();
-        LbNome = new javax.swing.JLabel();
-        LbSexo = new javax.swing.JLabel();
-        LbCpf = new javax.swing.JLabel();
-        LbRg = new javax.swing.JLabel();
-        LbNascimento = new javax.swing.JLabel();
-        LbIdade = new javax.swing.JLabel();
-        LbEstado = new javax.swing.JLabel();
-        ftfCodigo = new javax.swing.JFormattedTextField();
+        buttonGroupPenalidades = new javax.swing.ButtonGroup();
+        panelDadosMilitar = new javax.swing.JPanel();
+        lblCodigo = new javax.swing.JLabel();
+        lblNome = new javax.swing.JLabel();
+        lblSexo = new javax.swing.JLabel();
+        lblCpf = new javax.swing.JLabel();
+        lblRg = new javax.swing.JLabel();
+        lblNascimento = new javax.swing.JLabel();
+        lblIdade = new javax.swing.JLabel();
+        lblEstado = new javax.swing.JLabel();
+        lblPatente = new javax.swing.JLabel();
+        lblPatenteIcon = new javax.swing.JLabel();
+        tfCodigo = new javax.swing.JTextField();
         tfNome = new javax.swing.JTextField();
+        tfIdade = new javax.swing.JTextField();
         ftfCpf = new javax.swing.JFormattedTextField();
         ftfRg = new javax.swing.JFormattedTextField();
         ftfNascimento = new javax.swing.JFormattedTextField();
-        ftfIdade = new javax.swing.JFormattedTextField();
-        rbMasculino = new javax.swing.JRadioButton();
-        rbFeminino = new javax.swing.JRadioButton();
         cbEstado = new javax.swing.JComboBox<>();
-        jLabel2 = new javax.swing.JLabel();
-        rbSoldado = new javax.swing.JRadioButton();
-        jLabel1 = new javax.swing.JLabel();
-        rbCabo = new javax.swing.JRadioButton();
-        lbCabo = new javax.swing.JLabel();
-        lbTerceiroSargento = new javax.swing.JLabel();
-        rbTerceiroSargento = new javax.swing.JRadioButton();
-        lbSoldado = new javax.swing.JLabel();
-        rbSegundoSargento = new javax.swing.JRadioButton();
-        jLabel6 = new javax.swing.JLabel();
-        lbSegundoSargento = new javax.swing.JLabel();
-        rbSubtenente = new javax.swing.JRadioButton();
-        rbAspirante = new javax.swing.JRadioButton();
-        rbSegundoTenente = new javax.swing.JRadioButton();
-        lbPrimeiroSargento = new javax.swing.JLabel();
-        rbPrimeiroSargento = new javax.swing.JRadioButton();
-        jLabel12 = new javax.swing.JLabel();
-        rbPrimeiroTenente = new javax.swing.JRadioButton();
-        jLabel13 = new javax.swing.JLabel();
-        rbCapitao = new javax.swing.JRadioButton();
-        LbSexo1 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
+        tfSexo = new javax.swing.JTextField();
+        tfPatente = new javax.swing.JTextField();
+        BtBuscarMilitar = new javax.swing.JButton();
+        panelTarefas = new javax.swing.JPanel();
         chkDescascarBatatas = new javax.swing.JCheckBox();
         chkLimparBanheiro = new javax.swing.JCheckBox();
         chkLimparCozinha = new javax.swing.JCheckBox();
@@ -107,72 +89,66 @@ public class FrameBuscar extends javax.swing.JFrame {
         chkRecarregar = new javax.swing.JCheckBox();
         chkTrocarEncanamento = new javax.swing.JCheckBox();
         chkLevantarBandeira = new javax.swing.JCheckBox();
-        jPanel1 = new javax.swing.JPanel();
-        jbTarefaFeita = new javax.swing.JButton();
-        jbTarefaNaoFeita = new javax.swing.JButton();
-        BtBuscarMilitar = new javax.swing.JButton();
-        btVoltar = new javax.swing.JButton();
-        btDeletarMilitar = new javax.swing.JButton();
-        btListagem = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
+        panelPenalidades = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         rbFlexao = new javax.swing.JRadioButton();
         rbAlmoco = new javax.swing.JRadioButton();
         rbMulta = new javax.swing.JRadioButton();
+        panelAcoes = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jFormattedTextField1 = new javax.swing.JFormattedTextField();
+        jRadioButton1 = new javax.swing.JRadioButton();
+        jRadioButton2 = new javax.swing.JRadioButton();
+        jLabel2 = new javax.swing.JLabel();
+        btVoltar = new javax.swing.JButton();
+        jbTarefaFeita = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        JpDadosMilitar.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED), "Dados do Militar", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Microsoft JhengHei Light", 1, 13), new java.awt.Color(51, 102, 0))); // NOI18N
+        panelDadosMilitar.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED), "Dados do Militar", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Microsoft JhengHei Light", 1, 13), new java.awt.Color(51, 102, 0))); // NOI18N
 
-        LbCodigo.setText("Código :");
+        lblCodigo.setText("Código");
 
-        LbNome.setText("Nome :");
+        lblNome.setText("Nome");
 
-        LbSexo.setText("Sexo :");
+        lblSexo.setText("Sexo");
 
-        LbCpf.setText("CPF :");
+        lblCpf.setText("CPF");
 
-        LbRg.setText("RG :");
+        lblRg.setText("RG");
 
-        LbNascimento.setText("Nascimento :");
+        lblNascimento.setText("Nascimento");
 
-        LbIdade.setText("Idade :");
+        lblIdade.setText("Idade");
 
-        LbEstado.setText("Estado :");
+        lblEstado.setText("Estado");
 
-        try {
-            ftfCodigo.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("######")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        ftfCodigo.setEnabled(false);
-        ftfCodigo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ftfCodigoActionPerformed(evt);
-            }
-        });
+        lblPatente.setText("Patente");
 
+        lblPatenteIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Icon_10_Capitão.png"))); // NOI18N
+
+        tfNome.setEnabled(false);
         tfNome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tfNomeActionPerformed(evt);
             }
         });
 
+        tfIdade.setEnabled(false);
+
         try {
             ftfCpf.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-##")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        ftfCpf.setEnabled(false);
 
         try {
             ftfRg.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##.###.###-#")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        ftfRg.setEnabled(false);
 
         try {
             ftfNascimento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
@@ -181,259 +157,118 @@ public class FrameBuscar extends javax.swing.JFrame {
         }
         ftfNascimento.setEnabled(false);
 
-        try {
-            ftfIdade.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        ftfIdade.setEnabled(false);
-
-        buttonGroup1.add(rbMasculino);
-        rbMasculino.setText("Masculino");
-        rbMasculino.setEnabled(false);
-        rbMasculino.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbMasculinoActionPerformed(evt);
-            }
-        });
-
-        buttonGroup1.add(rbFeminino);
-        rbFeminino.setText("Feminino");
-        rbFeminino.setEnabled(false);
-
         cbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SP", "RJ", "MG", "ES", "DF" }));
-        cbEstado.setEnabled(false);
         cbEstado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbEstadoActionPerformed(evt);
             }
         });
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Icon_06_Subtenente.png"))); // NOI18N
+        tfSexo.setEditable(false);
+        tfSexo.setEnabled(false);
 
-        buttonGroup2.add(rbSoldado);
-        rbSoldado.setText("Soldado");
-        rbSoldado.setEnabled(false);
-        rbSoldado.addActionListener(new java.awt.event.ActionListener() {
+        tfPatente.setEnabled(false);
+
+        BtBuscarMilitar.setText("Buscar Militar");
+        BtBuscarMilitar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbSoldadoActionPerformed(evt);
+                BtBuscarMilitarActionPerformed(evt);
             }
         });
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Icon_07_Aspirante.png"))); // NOI18N
-
-        buttonGroup2.add(rbCabo);
-        rbCabo.setText("Cabo");
-        rbCabo.setEnabled(false);
-
-        lbCabo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Icon_02_Cabo.png"))); // NOI18N
-
-        lbTerceiroSargento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Icon_03_Terceiro-Sargento.png"))); // NOI18N
-
-        buttonGroup2.add(rbTerceiroSargento);
-        rbTerceiroSargento.setText("3º Sargento");
-        rbTerceiroSargento.setEnabled(false);
-
-        lbSoldado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Icon_01_Soldado.png"))); // NOI18N
-
-        buttonGroup2.add(rbSegundoSargento);
-        rbSegundoSargento.setText("2º Sargento");
-        rbSegundoSargento.setEnabled(false);
-
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Icon_08_Segundo-Tenente.png"))); // NOI18N
-
-        lbSegundoSargento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Icon_04_Segundo-Sargento.png"))); // NOI18N
-
-        buttonGroup2.add(rbSubtenente);
-        rbSubtenente.setText("Subtenente");
-        rbSubtenente.setEnabled(false);
-
-        buttonGroup2.add(rbAspirante);
-        rbAspirante.setText("Aspirante");
-        rbAspirante.setEnabled(false);
-
-        buttonGroup2.add(rbSegundoTenente);
-        rbSegundoTenente.setText("2º Tenente");
-        rbSegundoTenente.setEnabled(false);
-
-        lbPrimeiroSargento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Icon_05_Primeiro-Sargento..png"))); // NOI18N
-
-        buttonGroup2.add(rbPrimeiroSargento);
-        rbPrimeiroSargento.setText("1º Sargento");
-        rbPrimeiroSargento.setEnabled(false);
-
-        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Icon_09_Primeiro-Tenente.png"))); // NOI18N
-
-        buttonGroup2.add(rbPrimeiroTenente);
-        rbPrimeiroTenente.setText("1º Tenente");
-        rbPrimeiroTenente.setEnabled(false);
-
-        jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Icon_10_Capitão.png"))); // NOI18N
-
-        buttonGroup2.add(rbCapitao);
-        rbCapitao.setText("Capitão");
-        rbCapitao.setEnabled(false);
-
-        LbSexo1.setText("Patente:");
-
-        javax.swing.GroupLayout JpDadosMilitarLayout = new javax.swing.GroupLayout(JpDadosMilitar);
-        JpDadosMilitar.setLayout(JpDadosMilitarLayout);
-        JpDadosMilitarLayout.setHorizontalGroup(
-            JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
+        javax.swing.GroupLayout panelDadosMilitarLayout = new javax.swing.GroupLayout(panelDadosMilitar);
+        panelDadosMilitar.setLayout(panelDadosMilitarLayout);
+        panelDadosMilitarLayout.setHorizontalGroup(
+            panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelDadosMilitarLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                        .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                                .addComponent(LbCodigo)
+                .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelDadosMilitarLayout.createSequentialGroup()
+                        .addGap(56, 56, 56)
+                        .addComponent(lblPatenteIcon)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(BtBuscarMilitar))
+                    .addGroup(panelDadosMilitarLayout.createSequentialGroup()
+                        .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelDadosMilitarLayout.createSequentialGroup()
+                                .addComponent(lblPatente)
+                                .addGap(18, 18, 18)
+                                .addComponent(tfPatente, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panelDadosMilitarLayout.createSequentialGroup()
+                                .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panelDadosMilitarLayout.createSequentialGroup()
+                                        .addComponent(lblNome)
+                                        .addGap(10, 10, 10)
+                                        .addComponent(tfNome, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(panelDadosMilitarLayout.createSequentialGroup()
+                                        .addComponent(lblSexo)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(tfSexo, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(37, 37, 37)
+                                        .addComponent(lblNascimento)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(ftfNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(18, 18, 18)
+                                .addComponent(lblIdade)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ftfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                                .addComponent(LbSexo)
+                                .addComponent(tfIdade, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panelDadosMilitarLayout.createSequentialGroup()
+                                .addComponent(lblCodigo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblCpf)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ftfCpf, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(49, 49, 49)
+                                .addComponent(lblRg)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(rbMasculino)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(rbFeminino, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                                .addComponent(LbNome)
-                                .addGap(10, 10, 10)
-                                .addComponent(tfNome, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(27, 27, 27)
-                        .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                                .addComponent(LbNascimento)
-                                .addGap(18, 18, 18)
-                                .addComponent(ftfNascimento, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE))
-                            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(LbCpf)
-                                    .addComponent(LbRg))
+                                .addComponent(ftfRg, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(28, 28, 28)
+                                .addComponent(lblEstado)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(ftfRg)
-                                    .addComponent(ftfCpf))))
-                        .addGap(18, 18, 18)
-                        .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                                .addComponent(LbIdade)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ftfIdade, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                                .addComponent(LbEstado)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbEstado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                    .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                        .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(rbSubtenente)
-                                    .addComponent(lbSoldado)
-                                    .addComponent(rbSoldado))
-                                .addGap(18, 18, 18)
-                                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lbCabo)
-                                    .addComponent(rbCabo)
-                                    .addComponent(jLabel1)
-                                    .addComponent(rbAspirante)))
-                            .addComponent(LbSexo1))
-                        .addGap(18, 18, 18)
-                        .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(rbTerceiroSargento)
-                            .addComponent(lbTerceiroSargento)
-                            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel6)
-                                    .addComponent(rbSegundoTenente))
-                                .addGap(18, 18, 18)
-                                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(rbPrimeiroTenente)
-                                    .addComponent(jLabel12)
-                                    .addComponent(lbSegundoSargento)
-                                    .addComponent(rbSegundoSargento))
-                                .addGap(18, 18, 18)
-                                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel13)
-                                    .addComponent(rbCapitao)
-                                    .addComponent(rbPrimeiroSargento)
-                                    .addComponent(lbPrimeiroSargento))))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        JpDadosMilitarLayout.setVerticalGroup(
-            JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(LbCodigo)
-                    .addComponent(LbCpf)
-                    .addComponent(LbIdade)
-                    .addComponent(ftfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ftfCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ftfIdade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(LbNome)
-                    .addComponent(LbRg)
-                    .addComponent(tfNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ftfRg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(LbEstado)
-                    .addComponent(cbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(LbSexo)
-                    .addComponent(LbNascimento)
-                    .addComponent(ftfNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(rbMasculino)
-                    .addComponent(rbFeminino))
-                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                        .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                                .addGap(9, 9, 9)
-                                .addComponent(LbSexo1)
-                                .addGap(18, 18, 18)
-                                .addComponent(lbSoldado))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpDadosMilitarLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lbSegundoSargento)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(rbSoldado, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(rbSegundoSargento, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                                .addComponent(lbPrimeiroSargento)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(rbPrimeiroSargento))
-                            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                                .addComponent(lbTerceiroSargento, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(rbTerceiroSargento))
-                            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                                .addComponent(lbCabo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(rbCabo)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
-                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel13))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(rbCapitao)
-                    .addComponent(rbPrimeiroTenente)
-                    .addComponent(rbSegundoTenente)
-                    .addComponent(rbAspirante)
-                    .addComponent(rbSubtenente))
+                                .addComponent(cbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
+        panelDadosMilitarLayout.setVerticalGroup(
+            panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelDadosMilitarLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCodigo)
+                    .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCpf)
+                    .addComponent(ftfCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblRg)
+                    .addComponent(ftfRg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblEstado)
+                    .addComponent(cbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelDadosMilitarLayout.createSequentialGroup()
+                        .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblNome)
+                            .addComponent(tfNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblSexo)
+                            .addComponent(tfSexo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblNascimento)
+                            .addComponent(ftfNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblIdade)
+                            .addComponent(tfIdade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblPatente)
+                            .addComponent(tfPatente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(lblPatenteIcon))
+                    .addComponent(BtBuscarMilitar))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED), "Quadro de Tarefas", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        panelTarefas.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED), "Quadro de Tarefas", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
         chkDescascarBatatas.setText("Descascar Batatas");
         chkDescascarBatatas.setEnabled(false);
@@ -465,56 +300,160 @@ public class FrameBuscar extends javax.swing.JFrame {
         chkLevantarBandeira.setText("Levantar Bandeira");
         chkLevantarBandeira.setEnabled(false);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelTarefasLayout = new javax.swing.GroupLayout(panelTarefas);
+        panelTarefas.setLayout(panelTarefasLayout);
+        panelTarefasLayout.setHorizontalGroup(
+            panelTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTarefasLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(chkDescascarBatatas)
                     .addComponent(chkLimparBanheiro)
                     .addComponent(chkLimparCozinha)
                     .addComponent(chkCozinharAlmoco))
                 .addGap(59, 59, 59)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelTarefasLayout.createSequentialGroup()
+                        .addGroup(panelTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(chkCozinharJanta)
                             .addComponent(chkAlimentarCavalos)
                             .addComponent(chkLimparEstabulos))
                         .addGap(43, 43, 43)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(chkTrocarEncanamento)
                             .addComponent(chkLevantarBandeira)))
                     .addComponent(chkRecarregar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        panelTarefasLayout.setVerticalGroup(
+            panelTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTarefasLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(chkDescascarBatatas)
                     .addComponent(chkCozinharJanta)
                     .addComponent(chkTrocarEncanamento))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(chkLimparBanheiro)
                     .addComponent(chkAlimentarCavalos)
                     .addComponent(chkLevantarBandeira))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(chkLimparCozinha)
                     .addComponent(chkLimparEstabulos))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(chkCozinharAlmoco)
                     .addComponent(chkRecarregar))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        panelPenalidades.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED), "Penalidades", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 0, 0))); // NOI18N
+
+        jLabel8.setText("Grau 1");
+
+        jLabel9.setText("Grau 2");
+
+        jLabel10.setText("Grau 3");
+
+        buttonGroupPenalidades.add(rbFlexao);
+        rbFlexao.setText("700 Flexoes");
+        rbFlexao.setEnabled(false);
+
+        buttonGroupPenalidades.add(rbAlmoco);
+        rbAlmoco.setText("2 dias sem almoço");
+        rbAlmoco.setEnabled(false);
+
+        buttonGroupPenalidades.add(rbMulta);
+        rbMulta.setText("Multa");
+        rbMulta.setEnabled(false);
+
+        javax.swing.GroupLayout panelPenalidadesLayout = new javax.swing.GroupLayout(panelPenalidades);
+        panelPenalidades.setLayout(panelPenalidadesLayout);
+        panelPenalidadesLayout.setHorizontalGroup(
+            panelPenalidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPenalidadesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelPenalidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelPenalidadesLayout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(rbFlexao))
+                    .addGroup(panelPenalidadesLayout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(rbAlmoco))
+                    .addGroup(panelPenalidadesLayout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(rbMulta)))
+                .addContainerGap(462, Short.MAX_VALUE))
+        );
+        panelPenalidadesLayout.setVerticalGroup(
+            panelPenalidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPenalidadesLayout.createSequentialGroup()
+                .addGroup(panelPenalidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(rbFlexao))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelPenalidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(rbAlmoco))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelPenalidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel10)
+                    .addComponent(rbMulta)))
+        );
+
+        panelAcoes.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jLabel1.setText("Data:");
+
+        jFormattedTextField1.setText("jFormattedTextField1");
+
+        jRadioButton1.setText("SIM");
+
+        jRadioButton2.setText("NÃO");
+
+        jLabel2.setText("Cumrpiu todas as atividades do dia?");
+
+        javax.swing.GroupLayout panelAcoesLayout = new javax.swing.GroupLayout(panelAcoes);
+        panelAcoes.setLayout(panelAcoesLayout);
+        panelAcoesLayout.setHorizontalGroup(
+            panelAcoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelAcoesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
+                .addComponent(jRadioButton1)
+                .addGap(18, 18, 18)
+                .addComponent(jRadioButton2)
+                .addGap(52, 52, 52))
+        );
+        panelAcoesLayout.setVerticalGroup(
+            panelAcoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelAcoesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelAcoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jRadioButton1)
+                    .addComponent(jRadioButton2)
+                    .addComponent(jLabel2))
+                .addContainerGap(22, Short.MAX_VALUE))
+        );
+
+        btVoltar.setText("Voltar");
+        btVoltar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btVoltarActionPerformed(evt);
+            }
+        });
 
         jbTarefaFeita.setBackground(new java.awt.Color(153, 153, 153));
         jbTarefaFeita.setForeground(new java.awt.Color(51, 255, 0));
@@ -526,169 +465,47 @@ public class FrameBuscar extends javax.swing.JFrame {
             }
         });
 
-        jbTarefaNaoFeita.setBackground(new java.awt.Color(153, 153, 153));
-        jbTarefaNaoFeita.setForeground(new java.awt.Color(255, 0, 0));
-        jbTarefaNaoFeita.setText("Tarefa não Feita");
-        jbTarefaNaoFeita.setEnabled(false);
-        jbTarefaNaoFeita.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbTarefaNaoFeitaActionPerformed(evt);
-            }
-        });
-
-        BtBuscarMilitar.setText("Buscar Soldado");
-        BtBuscarMilitar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtBuscarMilitarActionPerformed(evt);
-            }
-        });
-
-        btVoltar.setText("Voltar");
-        btVoltar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btVoltarActionPerformed(evt);
-            }
-        });
-
-        btDeletarMilitar.setText("Deletar");
-        btDeletarMilitar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btDeletarMilitarActionPerformed(evt);
-            }
-        });
-
-        btListagem.setText("Listagem");
-        btListagem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btListagemActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(BtBuscarMilitar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jbTarefaFeita, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jbTarefaNaoFeita, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btDeletarMilitar, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btListagem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(BtBuscarMilitar)
-                    .addComponent(jbTarefaFeita)
-                    .addComponent(jbTarefaNaoFeita)
-                    .addComponent(btDeletarMilitar)
-                    .addComponent(btListagem)
-                    .addComponent(btVoltar))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED), "Penalidades", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 0, 0))); // NOI18N
-
-        jLabel8.setText("Grau 1");
-
-        jLabel9.setText("Grau 2");
-
-        jLabel10.setText("Grau 3");
-
-        buttonGroup3.add(rbFlexao);
-        rbFlexao.setText("700 Flexoes");
-        rbFlexao.setEnabled(false);
-
-        buttonGroup3.add(rbAlmoco);
-        rbAlmoco.setText("2 dias sem almoço");
-        rbAlmoco.setEnabled(false);
-
-        buttonGroup3.add(rbMulta);
-        rbMulta.setText("Multa");
-        rbMulta.setEnabled(false);
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(rbFlexao)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(rbAlmoco))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel10)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(rbMulta)))
-                        .addGap(0, 130, Short.MAX_VALUE))))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(rbFlexao))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(rbAlmoco))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel10)
-                    .addComponent(rbMulta)))
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(JpDadosMilitar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(panelAcoes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelTarefas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelDadosMilitar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelPenalidades, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jbTarefaFeita, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(JpDadosMilitar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelDadosMilitar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelTarefas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(panelAcoes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panelPenalidades, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btVoltar)
+                    .addComponent(jbTarefaFeita))
+                .addGap(5, 5, 5))
         );
 
-        JpDadosMilitar.getAccessibleContext().setAccessibleDescription("");
+        panelDadosMilitar.getAccessibleContext().setAccessibleDescription("");
+        panelPenalidades.getAccessibleContext().setAccessibleDescription("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
     //Botão Tarefa Feita faz com que a Tarefa de um Certo Militar seja Coloca tudo em False que significa "FEITO"=False  e Não Feito= "true"
     private void jbTarefaFeitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbTarefaFeitaActionPerformed
-
+/*
        // excluirSoldadoArray(tfNome.getText());
        // militar = null;
        // limparCamposFrame();
@@ -704,8 +521,8 @@ public class FrameBuscar extends javax.swing.JFrame {
                 limparTarefas(s);
                 
                 menu.sold.set(i, s); 
-                s.setPenalidades(null);
-                s.setContador(0);
+                //s.setPenalidades(null);
+                //s.setContador(0);
                 
        rbAlmoco.setSelected(false);
        rbMulta.setSelected(false);             
@@ -721,320 +538,101 @@ public class FrameBuscar extends javax.swing.JFrame {
        rbFlexao.setSelected(true);
        jbTarefaNaoFeita.setEnabled(false);
        
-        /*while((i<menu.sold.size())&&(menu.sold.get(i).getCodigo() != CodigoSoldado)){
+        while((i<menu.sold.size())&&(menu.sold.get(i).getCodigo() != CodigoSoldado)){
             i++;
-        }*/
-
-
-
+        }
+        */
     }//GEN-LAST:event_jbTarefaFeitaActionPerformed
-     //Limpar só os Campos Contendo CheckBox
-    public void limparCamposFrame2(){
-        
-        chkDescascarBatatas.setSelected(false);
-        chkLimparBanheiro.setSelected(false);
-        chkLimparCozinha.setSelected(false);
-        chkLimparEstabulos.setSelected(false);
-        chkRecarregar.setSelected(false);
-        chkAlimentarCavalos.setSelected(false);
-        chkCozinharAlmoco.setSelected(false);
-        chkCozinharJanta.setSelected(false);
-        chkTrocarEncanamento.setSelected(false);
-        chkLevantarBandeira.setSelected(false);
-             
-     }
-    //Busca o Militar Que você está Procurando através do Nome.
-    private Militar buscarMilitarNome(String nome){
-        Militar so = null;
-        for(int i=0;i<menu.sold.size();i++){
-            if(nome.equals(menu.sold.get(i).getNome())){
-                System.out.println("Soldado: "+menu.sold.get(i).getNome());
-                so = menu.sold.get(i);
-                jbTarefaFeita.setEnabled(true);
-                jbTarefaNaoFeita.setEnabled(true);
-            }
-            
+
+    //limpa os campos
+    private void limparCampos() {
+        tfNome.setText("");
+        ftfCpf.setText("");
+        ftfRg.setText("");
+        ftfNascimento.setText("");
+        tfIdade.setText("");
+        cbEstado.setSelectedIndex(-1);
+        tfSexo.setText("");
+        tfPatente.setText("");
+        for(javax.swing.JCheckBox c : checkBoxes) {
+            c.setSelected(false);
         }
-        if(so==null){
-                JOptionPane.showMessageDialog(null,"Soldado não encontrado.");
-        }
-        return so;
+        buttonGroupPenalidades.clearSelection();
+        rbFlexao.setEnabled(true);
+        rbAlmoco.setEnabled(true);
+        rbMulta.setEnabled(true);
     }
     
+    private void setCamposFromMilitar(Militar militar) {
+        tfCodigo.setText("" + militar.getCodigo());
+        tfNome.setText(militar.getNome());
+        ftfCpf.setText(militar.getCpf());
+        ftfRg.setText(militar.getRg());
+        cbEstado.setSelectedItem(militar.getEstado());
+        tfSexo.setText(militar.getSexo() == 'M' ? "Masculino" : "Feminino");
+        ftfNascimento.setText(Utils.dateToString(militar.getNascimento()));
+        tfPatente.setText(militar.getPatente().getNome());
+        String nascimento = ftfNascimento.getText();
+        int idade = Utils.getAgeInYears(Utils.stringToDate(nascimento));
+        tfIdade.setText(""+idade);
+        for(int i = 0; i < checkBoxes.size(); i++) {
+            checkBoxes.get(i).setSelected(militar.fazAtividade(EnumTarefa.values()[i]));
+        }
+        rbFlexao.setEnabled(true);
+        rbAlmoco.setEnabled(true);
+        rbMulta.setEnabled(true);
+    }
     //Botão Buscar ao apertar ele Buscar o Militar que você Deseja Encontrar através do nome.
     private void BtBuscarMilitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtBuscarMilitarActionPerformed
-       Militar milit = new Militar();
-        String nome =  tfNome.getText();
-        
-        try {
-            milit = Busca.localizaMilitar(nome);
-        } 
-        catch (SQLException ex) {
-            Logger.getLogger(FrameCadastro.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        catch (ClassNotFoundException ex) {
-            Logger.getLogger(FrameCadastro.class.getName()).log(Level.SEVERE, null, ex);
+        String codigoStr = tfCodigo.getText();
+        String cpf = ftfCpf.getText();
+        String rg = ftfRg.getText();
+        String estado = (String)cbEstado.getSelectedItem();
+        int tipoBusca = 0;
+        if(codigoStr.trim().equals("")) {
+            if(cpf.trim().equals("")) {
+                tipoBusca = 2;
+            }
+            else
+                tipoBusca = 1;
         }
-        ftfCodigo.setText(milit.getCodigo()+ "");
-        tfNome.setText(milit.getNome());
-        ftfCpf.setText(milit.getCpf());
-        ftfRg.setText(milit.getRg());
-        cbEstado.setSelectedItem(milit.getEstado());
-        rbMasculino.setSelected(milit.getSexo().equals("Masculino"));
-        rbFeminino.setSelected(milit.getSexo().equals("Feminino")); 
-        ftfNascimento.setText(milit.getNascimento());
-        rbCapitao.setSelected(milit.getPatente().equals("Capitão"));
-        rbCapitao.setEnabled(false);
-        rbPrimeiroTenente.setSelected(milit.getPatente().equals("PrimeiroTenente"));
-        rbPrimeiroTenente.setEnabled(false);
-        rbSegundoTenente.setSelected(milit.getPatente().equals("SegundoTenente"));
-        rbSegundoTenente.setEnabled(false);
-        rbAspirante.setSelected(milit.getPatente().equals("Aspirante"));
-        rbAspirante.setEnabled(false);
-        rbSubtenente.setSelected(milit.getPatente().equals("Subtenente"));
-        rbSubtenente.setEnabled(false);
-        rbPrimeiroSargento.setSelected(milit.getPatente().equals("PrimeiroSargento"));
-        rbPrimeiroSargento.setEnabled(false);
-        rbSegundoSargento.setSelected(milit.getPatente().equals("SegundoSargento"));
-        rbSegundoSargento.setEnabled(false);
-        rbTerceiroSargento.setSelected(milit.getPatente().equals("TerceiroSargento"));
-        rbTerceiroSargento.setEnabled(false);
-        rbCabo.setSelected(milit.getPatente().equals("Cabo"));
-        rbCabo.setEnabled(false);
-        rbSoldado.setSelected(milit.getPatente().equals("Soldado"));
-        rbSoldado.setEnabled(false);
-        ftfIdade.setText(milit.getIdade()+"");
-        chkDescascarBatatas.setSelected(milit.isDescascar());
-        chkLimparBanheiro.setSelected(milit.isLimparBanheiro());
-        chkLimparCozinha.setSelected(milit.isLimparCozinha());
-        chkCozinharAlmoco.setSelected(milit.isCozinharArmoco());
-        chkCozinharJanta.setSelected(milit.isCozinharJanta());
-        chkAlimentarCavalos.setSelected(milit.isAlimentarCavalos());
-        chkLimparEstabulos.setSelected(milit.isLimparEstabulos());
-        chkRecarregar.setSelected(milit.isRecarregarArmamento());
-        chkTrocarEncanamento.setSelected(milit.isTrocarEncanamento());
-        chkLevantarBandeira.setSelected(milit.isLevantarBandeira());
+        
+        Militar militar;
+        if(tipoBusca == 0) {
+            int codigo = Utils.stringToInt(codigoStr);
+            militar = MilitarController.buscarMilitar(codigo);
+        }
+        else if(tipoBusca == 1)
+            militar = MilitarController.buscarMilitarCPF(cpf);
+        else
+            militar = MilitarController.buscarMilitarRG(rg,estado);
 
+        if(militar != null) {
+            setCamposFromMilitar(militar);            
+            militarAtual = militar;
+        }
+        else {
+            limparCampos();
+        }
     }//GEN-LAST:event_BtBuscarMilitarActionPerformed
      
-    //Botão de remoção do Militar do arrayList depois de Buscado o Nome.
-    private void btDeletarMilitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDeletarMilitarActionPerformed
-        try {
-            Exclui.excluirMilitar(tfNome.getText());
-        } 
-        catch (SQLException ex) {
-            Logger.getLogger(FrameCadastro.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (ClassNotFoundException ex) {
-            Logger.getLogger(FrameBuscar.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btDeletarMilitarActionPerformed
-
     private void btVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btVoltarActionPerformed
         dispose();
     }//GEN-LAST:event_btVoltarActionPerformed
     
-    //Listagem dos Militares no FrameListagem
-    private void btListagemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btListagemActionPerformed
-        
-        listarTodosMilitar();
-        
-    }//GEN-LAST:event_btListagemActionPerformed
-       
-    //Botão de Tarefa nao feita, Ela acha o Militar adiciona um contador dentro do contador da Classe Militar assim Fazendo um If encadeado para As Penalidades
-    private void jbTarefaNaoFeitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbTarefaNaoFeitaActionPerformed
-           
-           int i = 0;
-           Integer CodigoSoldado = Integer.parseInt(ftfCodigo.getText());
-           Militar s=null;
-           int cont = 0 ;
-           
-           for(i=0; i<menu.sold.size(); i++){
-            if(menu.sold.get(i).getCodigo().equals(CodigoSoldado)){
-                s = menu.sold.get(i);
-                
-               cont = s.getContador() + 1;
-               s.setContador(cont);
-                
-                if(cont == 1){
-                    
-                    s.setPenalidades(rbFlexao.getText());
-                    rbFlexao.setSelected(true);
-                    rbMulta.setSelected(false);
-                    rbAlmoco.setSelected(false);
-                    JOptionPane.showMessageDialog(null,"PENALIDADE ADICIONADA");
-                    
-                }
-                else if(cont == 2){
-                    rbAlmoco.setSelected(true);
-                    rbMulta.setSelected(false);
-                    rbFlexao.setSelected(false);
-                     s.setPenalidades(rbAlmoco.getText());
-                     JOptionPane.showMessageDialog(null,"PENALIDADE ADICIONADA");
-                    
-                }
-                else if(cont == 3){
-                    rbMulta.setSelected(true);
-                    rbFlexao.setSelected(false);
-                    rbAlmoco.setSelected(false);
-                    s.setPenalidades(rbMulta.getText());
-                    JOptionPane.showMessageDialog(null,"PENALIDADE ADICIONADA");
-                }
-                else if(cont >= 4){
-                
-                  JOptionPane.showMessageDialog(null, "NUMERO DE PENALIDADE ULTRAPASSADA");
-                    
-                }
-                
-        
-            menu.sold.set(i, s); 
-                
-            }
-       
-                      
-        }  
-           
-        
-    }//GEN-LAST:event_jbTarefaNaoFeitaActionPerformed
-
-    private void rbSoldadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbSoldadoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rbSoldadoActionPerformed
-
+      
     private void cbEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbEstadoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbEstadoActionPerformed
-
-    private void rbMasculinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbMasculinoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rbMasculinoActionPerformed
 
     private void tfNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfNomeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tfNomeActionPerformed
 
-    private void ftfCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ftfCodigoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ftfCodigoActionPerformed
-    //Metodo para Listagem dos Militar no FrameListagem passando como String pra lá.irá percorrer a ArrayList Inteira
-    private void listarTodosMilitar(){
-        String soldado = new String();
-        int i;
-        for(i=0;i<menu.sold.size();i++){
-            soldado = soldado + "Nome: " + menu.sold.get(i).getNome() + "\n "
-                              + "Codigo: " + menu.sold.get(i).getCodigo() + "\n "
-                              + "Cpf: " + menu.sold.get(i).getCpf() + "\n "
-                              + "Rg: " + menu.sold.get(i).getRg() + "\n "
-                              + "Idade: " + menu.sold.get(i).getIdade() + "\n "
-                              + "Nascimento: " + menu.sold.get(i).getNascimento()+ "\n"
-                              +"Alimentar Cavalos"+ menu.sold.get(i).isAlimentarCavalos()+ "\n "
-                              +"COZINHAR ALMOÇO"+ menu.sold.get(i).isCozinharArmoco()+ "\n"
-                              +"COZINHAR JANTA"+ menu.sold.get(i).isCozinharJanta() + "\n"
-                              +"DESCASCAR BATATA"+ menu.sold.get(i).isDescascar()+ "\n"
-                              +"LEVANTAR BANDEIRA"+ menu.sold.get(i).isLevantarBandeira()+ "\n"
-                              +"LIMPAR BANHEIRO"+ menu.sold.get(i).isLimparBanheiro()+ "\n"
-                              +"LIMPAR COZINHA"+ menu.sold.get(i).isLimparCozinha()+ "\n"
-                              +"LIMPAR ESTABULOS"+ menu.sold.get(i).isLimparEstabulos()+ "\n"
-                              +"RECARREGAR ARMAMENTO"+ menu.sold.get(i).isRecarregarArmamento()+ "\n"
-                              +"TROCAR ENCANAMENTOS"+ menu.sold.get(i).isTrocarEncanamento() + "\n"
-                              +"Penalidades"+ menu.sold.get(i).getPenalidades() + "\n";
-                    
-                               
-        }
-        
-        FrameListagem frmlistagem = new FrameListagem(soldado);
-        frmlistagem.setVisible(true);
-    }
-    //Excluir um Militar do ArrayList.
-    private void excluirSoldadoArray(String nome){
-        for(int i=0;i<menu.sold.size();i++){
-            if(nome.equals(menu.sold.get(i).getNome())){
-                JOptionPane.showMessageDialog(null,"Soldado :" + menu.sold.get(i).getNome());
-                JOptionPane.showMessageDialog(null, "Soldado removido");
-                menu.sold.remove(i);
-            }
-            else{
-                JOptionPane.showMessageDialog(null, "Soldado não existe");
-            }
-        }
-    }
-    //Limpa Todos os Campos do Frame.
-    public void limparCamposFrame(){
-        ftfCodigo.setText("");  
-        tfNome.setText("");
-        ftfCpf.setText("");
-        ftfRg.setText("");
-        ftfNascimento.setText("");
-        ftfIdade.setText("");
-        cbEstado.setSelectedIndex(-1);
-        buttonGroup2.clearSelection();
-        buttonGroup1.clearSelection();
-        chkDescascarBatatas.setSelected(false);
-        chkLimparBanheiro.setSelected(false);
-        chkLimparCozinha.setSelected(false);
-        chkLimparEstabulos.setSelected(false);
-        chkRecarregar.setSelected(false);
-        chkAlimentarCavalos.setSelected(false);
-        chkCozinharAlmoco.setSelected(false);
-        chkCozinharJanta.setSelected(false);
-        chkTrocarEncanamento.setSelected(false);
-        chkLevantarBandeira.setSelected(false);
-                
-    }
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrameBuscar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrameBuscar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrameBuscar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrameBuscar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrameBuscar().setVisible(true);
-            }
-        });
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtBuscarMilitar;
-    private javax.swing.JPanel JpDadosMilitar;
-    private javax.swing.JLabel LbCodigo;
-    private javax.swing.JLabel LbCpf;
-    private javax.swing.JLabel LbEstado;
-    private javax.swing.JLabel LbIdade;
-    private javax.swing.JLabel LbNascimento;
-    private javax.swing.JLabel LbNome;
-    private javax.swing.JLabel LbRg;
-    private javax.swing.JLabel LbSexo;
-    private javax.swing.JLabel LbSexo1;
-    private javax.swing.JButton btDeletarMilitar;
-    private javax.swing.JButton btListagem;
     private javax.swing.JButton btVoltar;
-    private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.ButtonGroup buttonGroup2;
-    private javax.swing.ButtonGroup buttonGroup3;
+    private javax.swing.ButtonGroup buttonGroupPenalidades;
     private javax.swing.JComboBox<String> cbEstado;
     private javax.swing.JCheckBox chkAlimentarCavalos;
     private javax.swing.JCheckBox chkCozinharAlmoco;
@@ -1046,44 +644,39 @@ public class FrameBuscar extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkLimparEstabulos;
     private javax.swing.JCheckBox chkRecarregar;
     private javax.swing.JCheckBox chkTrocarEncanamento;
-    private javax.swing.JFormattedTextField ftfCodigo;
     private javax.swing.JFormattedTextField ftfCpf;
-    private javax.swing.JFormattedTextField ftfIdade;
     private javax.swing.JFormattedTextField ftfNascimento;
     private javax.swing.JFormattedTextField ftfRg;
+    private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JButton jbTarefaFeita;
-    private javax.swing.JButton jbTarefaNaoFeita;
-    private javax.swing.JLabel lbCabo;
-    private javax.swing.JLabel lbPrimeiroSargento;
-    private javax.swing.JLabel lbSegundoSargento;
-    private javax.swing.JLabel lbSoldado;
-    private javax.swing.JLabel lbTerceiroSargento;
+    private javax.swing.JLabel lblCodigo;
+    private javax.swing.JLabel lblCpf;
+    private javax.swing.JLabel lblEstado;
+    private javax.swing.JLabel lblIdade;
+    private javax.swing.JLabel lblNascimento;
+    private javax.swing.JLabel lblNome;
+    private javax.swing.JLabel lblPatente;
+    private javax.swing.JLabel lblPatenteIcon;
+    private javax.swing.JLabel lblRg;
+    private javax.swing.JLabel lblSexo;
+    private javax.swing.JPanel panelAcoes;
+    private javax.swing.JPanel panelDadosMilitar;
+    private javax.swing.JPanel panelPenalidades;
+    private javax.swing.JPanel panelTarefas;
     private javax.swing.JRadioButton rbAlmoco;
-    private javax.swing.JRadioButton rbAspirante;
-    private javax.swing.JRadioButton rbCabo;
-    private javax.swing.JRadioButton rbCapitao;
-    private javax.swing.JRadioButton rbFeminino;
     private javax.swing.JRadioButton rbFlexao;
-    private javax.swing.JRadioButton rbMasculino;
     private javax.swing.JRadioButton rbMulta;
-    private javax.swing.JRadioButton rbPrimeiroSargento;
-    private javax.swing.JRadioButton rbPrimeiroTenente;
-    private javax.swing.JRadioButton rbSegundoSargento;
-    private javax.swing.JRadioButton rbSegundoTenente;
-    private javax.swing.JRadioButton rbSoldado;
-    private javax.swing.JRadioButton rbSubtenente;
-    private javax.swing.JRadioButton rbTerceiroSargento;
+    private javax.swing.JTextField tfCodigo;
+    private javax.swing.JTextField tfIdade;
     private javax.swing.JTextField tfNome;
+    private javax.swing.JTextField tfPatente;
+    private javax.swing.JTextField tfSexo;
     // End of variables declaration//GEN-END:variables
 }

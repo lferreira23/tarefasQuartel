@@ -35,12 +35,12 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jPanel1" max="32767" attributes="0"/>
+                  <Component id="panelOpcoes" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
-                      <Component id="JpDadosMilitar" min="-2" max="-2" attributes="0"/>
+                      <Component id="panelDadosMilitar" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="jPanel2" max="32767" attributes="0"/>
+                  <Component id="panelTarefas" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -50,18 +50,18 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="JpDadosMilitar" min="-2" max="-2" attributes="0"/>
+              <Component id="panelDadosMilitar" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
+              <Component id="panelTarefas" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanel1" min="-2" pref="48" max="-2" attributes="0"/>
+              <Component id="panelOpcoes" min="-2" pref="48" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JPanel" name="JpDadosMilitar">
+    <Container class="javax.swing.JPanel" name="panelDadosMilitar">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="9e" green="c7" red="a4" type="rgb"/>
@@ -131,17 +131,7 @@
                       </Group>
                       <Group type="102" attributes="0">
                           <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="LbNome" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="tfNome" min="-2" pref="219" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="LbCodigo" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="ftfCodigo" min="-2" pref="218" max="-2" attributes="0"/>
-                              </Group>
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="LbSexo" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -149,13 +139,24 @@
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="rbFeminino" min="-2" pref="91" max="-2" attributes="0"/>
                               </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="LbNome" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="LbCodigo" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="tfNome" pref="219" max="32767" attributes="0"/>
+                                      <Component id="tfCodigo" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="LbCpf" min="-2" max="-2" attributes="0"/>
+                                  <Component id="LbNascimento" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="ftfCpf" max="32767" attributes="0"/>
+                                  <Component id="ftfNascimento" min="-2" pref="109" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="LbRg" min="-2" max="-2" attributes="0"/>
@@ -163,20 +164,23 @@
                                   <Component id="ftfRg" min="-2" pref="144" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="LbNascimento" min="-2" max="-2" attributes="0"/>
+                                  <Component id="LbCpf" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="ftfNascimento" min="-2" pref="109" max="-2" attributes="0"/>
+                                  <Component id="ftfCpf" min="-2" pref="144" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="LbEstado" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="LbIdade" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="ftfIdade" max="32767" attributes="0"/>
-                              <Component id="cbEstado" max="32767" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="LbEstado" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="cbEstado" max="32767" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="LbIdade" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="tfIdade" max="32767" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                   </Group>
@@ -192,9 +196,9 @@
                       <Component id="LbCodigo" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="LbCpf" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="LbIdade" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="ftfCodigo" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="ftfCpf" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="ftfIdade" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tfCodigo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tfIdade" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -268,27 +272,27 @@
         </Component>
         <Component class="javax.swing.JLabel" name="LbNome">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Nome:"/>
+            <Property name="text" type="java.lang.String" value="Nome*"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="LbSexo">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Sexo:"/>
+            <Property name="text" type="java.lang.String" value="Sexo*"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="LbCpf">
           <Properties>
-            <Property name="text" type="java.lang.String" value="CPF:"/>
+            <Property name="text" type="java.lang.String" value="CPF*"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="LbRg">
           <Properties>
-            <Property name="text" type="java.lang.String" value="RG:"/>
+            <Property name="text" type="java.lang.String" value="RG*"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="LbNascimento">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Nascimento:"/>
+            <Property name="text" type="java.lang.String" value="Nascimento*"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="LbIdade">
@@ -298,18 +302,10 @@
         </Component>
         <Component class="javax.swing.JLabel" name="LbEstado">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Estado:"/>
+            <Property name="text" type="java.lang.String" value="Estado*"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="ftfCodigo">
-          <Properties>
-            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
-              <Format format="######" subtype="-1" type="5"/>
-            </Property>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="FrameCadastro_ftfCodigo"/>
-          </AuxValues>
+        <Component class="javax.swing.JTextField" name="tfCodigo">
         </Component>
         <Component class="javax.swing.JTextField" name="tfNome">
         </Component>
@@ -333,13 +329,9 @@
               <Format format="##/##/####" subtype="-1" type="5"/>
             </Property>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JFormattedTextField" name="ftfIdade">
-          <Properties>
-            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
-              <Format format="##" subtype="-1" type="5"/>
-            </Property>
-          </Properties>
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ftfNascimentoFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JRadioButton" name="rbMasculino">
           <Properties>
@@ -391,6 +383,7 @@
             <Property name="text" type="java.lang.String" value="Soldado"/>
           </Properties>
           <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbSoldadoItemStateChanged"/>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbSoldadoActionPerformed"/>
           </Events>
         </Component>
@@ -409,7 +402,7 @@
             <Property name="text" type="java.lang.String" value="Cabo"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbCaboActionPerformed"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbCaboItemStateChanged"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lbCabo">
@@ -434,7 +427,7 @@
             <Property name="text" type="java.lang.String" value="3&#xba; Sargento"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbTerceiroSargentoActionPerformed"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbTerceiroSargentoItemStateChanged"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lbSoldado">
@@ -452,7 +445,7 @@
             <Property name="text" type="java.lang.String" value="2&#xba; Sargento"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbSegundoSargentoActionPerformed"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbSegundoSargentoItemStateChanged"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lbSegundoTenente">
@@ -477,7 +470,7 @@
             <Property name="text" type="java.lang.String" value="Subtenente"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbSubtenenteActionPerformed"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbSubtenenteItemStateChanged"/>
           </Events>
         </Component>
         <Component class="javax.swing.JRadioButton" name="rbAspirante">
@@ -488,7 +481,7 @@
             <Property name="text" type="java.lang.String" value="Aspirante"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbAspiranteActionPerformed"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbAspiranteItemStateChanged"/>
           </Events>
         </Component>
         <Component class="javax.swing.JRadioButton" name="rbSegundoTenente">
@@ -499,7 +492,7 @@
             <Property name="text" type="java.lang.String" value="2&#xba; Tenente"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbSegundoTenenteActionPerformed"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbSegundoTenenteItemStateChanged"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lbPrimeiroSargento">
@@ -517,7 +510,7 @@
             <Property name="text" type="java.lang.String" value="1&#xba; Sargento"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbPrimeiroSargentoActionPerformed"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbPrimeiroSargentoItemStateChanged"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lbPrimeiroTenente">
@@ -535,7 +528,7 @@
             <Property name="text" type="java.lang.String" value="1&#xba; Tenente"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbPrimeiroTenenteActionPerformed"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbPrimeiroTenenteItemStateChanged"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lbCapitao">
@@ -553,17 +546,25 @@
             <Property name="text" type="java.lang.String" value="Capit&#xe3;o"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbCapitaoActionPerformed"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbCapitaoItemStateChanged"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="LbSexo1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Patente:"/>
+            <Property name="text" type="java.lang.String" value="Patente*"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tfIdade">
+          <Properties>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfIdadeActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JPanel" name="jPanel2">
+    <Container class="javax.swing.JPanel" name="panelTarefas">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="9e" green="c7" red="a4" type="rgb"/>
@@ -703,7 +704,7 @@
         </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JPanel" name="jPanel1">
+    <Container class="javax.swing.JPanel" name="panelOpcoes">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="9e" green="c7" red="a4" type="rgb"/>
@@ -722,14 +723,14 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jbCadastrarTarefa" min="-2" pref="113" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
-                  <Component id="btSalvar" min="-2" pref="103" max="-2" attributes="0"/>
+                  <Component id="btCadastrarMilitar" min="-2" pref="113" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="btEditar" min="-2" pref="116" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="BtBuscarSoldado" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="btBuscarMilitar" max="32767" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="btEditarMilitar" min="-2" pref="116" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="btExcluirMilitar" min="-2" pref="116" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="btVoltar" min="-2" pref="106" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -740,11 +741,11 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="btEditar" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btSalvar" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jbCadastrarTarefa" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="BtBuscarSoldado" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btEditarMilitar" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btCadastrarMilitar" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btBuscarMilitar" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btVoltar" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btExcluirMilitar" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
               </Group>
@@ -752,12 +753,12 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="jbCadastrarTarefa">
+        <Component class="javax.swing.JButton" name="btCadastrarMilitar">
           <Properties>
             <Property name="text" type="java.lang.String" value="Cadastrar "/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbCadastrarTarefaActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btCadastrarMilitarActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btVoltar">
@@ -768,30 +769,30 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btVoltarActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btEditar">
+        <Component class="javax.swing.JButton" name="btEditarMilitar">
           <Properties>
             <Property name="text" type="java.lang.String" value="Editar"/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btEditarActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btEditarMilitarActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="BtBuscarSoldado">
+        <Component class="javax.swing.JButton" name="btBuscarMilitar">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Buscar Militar"/>
+            <Property name="text" type="java.lang.String" value="Buscar"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtBuscarSoldadoActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btBuscarMilitarActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btSalvar">
+        <Component class="javax.swing.JButton" name="btExcluirMilitar">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Salvar"/>
+            <Property name="text" type="java.lang.String" value="Excluir"/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSalvarActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btExcluirMilitarActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

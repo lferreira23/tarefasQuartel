@@ -1,25 +1,20 @@
 package view;
 
-
-import model.Militar;
-import java.util.ArrayList;
-
-
 /**
- * FrameMenu usado para a escolha Entre Cadastrar e Buscar Militar, é também onde fica a ArrayList Para manter sempre Aberto.
+ * FrameMain usado para a escolha Entre Cadastrar e Buscar Militar, é também onde fica a ArrayList Para manter sempre Aberto.
  * @author Luiz Ferreira
  * @since 26/08/2017
  */
-public class FrameMenu extends javax.swing.JFrame {
+public class FrameMain extends javax.swing.JFrame {
     
-    ArrayList <Militar> sold = new ArrayList();
-    String soldado = new String();
-    int codigoGlobal = 0;
-    public FrameMenu() {
+    public FrameMain() {
         initComponents();
-        
-        InserirSoldadoArray();
-        
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+               FrameLogin frameLogin = new FrameLogin(FrameMain.this);
+               frameLogin.setVisible(true);
+            }
+        });
     }
 
     /**
@@ -37,6 +32,7 @@ public class FrameMenu extends javax.swing.JFrame {
         jmMilitar = new javax.swing.JMenu();
         jmCadastrar = new javax.swing.JMenuItem();
         jmBuscar = new javax.swing.JMenuItem();
+        jmListar = new javax.swing.JMenuItem();
         jmSair = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
@@ -70,7 +66,8 @@ public class FrameMenu extends javax.swing.JFrame {
 
         jmCadastrar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         jmCadastrar.setBackground(new java.awt.Color(164, 199, 158));
-        jmCadastrar.setText("Cadastrar");
+        jmCadastrar.setText("Cadastro");
+        jmCadastrar.setActionCommand("Cadastar");
         jmCadastrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jmCadastrarActionPerformed(evt);
@@ -87,6 +84,15 @@ public class FrameMenu extends javax.swing.JFrame {
             }
         });
         jmMilitar.add(jmBuscar);
+
+        jmListar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jmListar.setText("Listar");
+        jmListar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmListarActionPerformed(evt);
+            }
+        });
+        jmMilitar.add(jmListar);
 
         jmSair.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         jmSair.setText("Sair");
@@ -125,8 +131,8 @@ public class FrameMenu extends javax.swing.JFrame {
     
     //passo o FrameCadastro como this para se referir ao conteudo do Frame Menu.
     private void jmCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmCadastrarActionPerformed
-        FrameCadastro framesoldado = new FrameCadastro(this);
-        framesoldado.setVisible(true);
+        FrameCadastro frameCadastro = new FrameCadastro(this);
+        frameCadastro.setVisible(true);
     }//GEN-LAST:event_jmCadastrarActionPerformed
    
     private void jmBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmBuscarActionPerformed
@@ -135,61 +141,13 @@ public class FrameMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jmBuscarActionPerformed
 
     private void jmSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmSairActionPerformed
-        dispose();
-        
+        System.exit(0);
     }//GEN-LAST:event_jmSairActionPerformed
-    
-    private void InserirSoldadoArray(){
-        
-        Militar sol = new Militar(123456, "Joao", "12345678912", "360698207", "DF", "Masculino", "29/06/1997", "qualquer coisa", 12 , false, true, true, false, true, false, true, false, true, false, null ,"Major" , 0 );
-        
-        Militar sol2 = new Militar(123457, "Lucas", "19999998643", "650394800", "BH", "Feminino", "07/09/1900", "qualquer coisa", 67 , true, true, true, true, true, true, true, true, true, true, null ,"Soldado" , 0 );
-        
-        Militar sol3 = new Militar(123458, "Pedro", "18232768877", "154987611", "SP", "Masculino", "07/09/1967", "qualquer coisa", 67 , true, true, false, true, true, false, true, true, false, true, null ,"Tenente" , 0 );
-        
-        this.sold.add(sol);
-        this.sold.add(sol2);
-        this.sold.add(sol3);
-        
-    }
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrameMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrameMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrameMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrameMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrameMenu().setVisible(true);
-            }
-        });
-    }
-    //Salva o soldado
-    public void salvarSoldado(Militar soldado){
-        sold.add(soldado);
-    }
+    private void jmListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmListarActionPerformed
+       FrameListagem frameListagem = new FrameListagem();
+       frameListagem.setVisible(true);
+    }//GEN-LAST:event_jmListarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu2;
@@ -197,10 +155,9 @@ public class FrameMenu extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JMenuItem jmBuscar;
     private javax.swing.JMenuItem jmCadastrar;
+    private javax.swing.JMenuItem jmListar;
     private javax.swing.JMenu jmMilitar;
     private javax.swing.JMenuItem jmSair;
     private javax.swing.JLabel lbExercitoLogo;
     // End of variables declaration//GEN-END:variables
-
-   
 }
