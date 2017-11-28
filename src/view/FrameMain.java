@@ -75,9 +75,9 @@ public class FrameMain extends javax.swing.JFrame {
         });
         jmMilitar.add(jmCadastrar);
 
-        jmBuscar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jmBuscar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         jmBuscar.setBackground(new java.awt.Color(164, 199, 158));
-        jmBuscar.setText("Buscar");
+        jmBuscar.setText("Tarefas");
         jmBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jmBuscarActionPerformed(evt);
@@ -85,8 +85,8 @@ public class FrameMain extends javax.swing.JFrame {
         });
         jmMilitar.add(jmBuscar);
 
-        jmListar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
-        jmListar.setText("Listar");
+        jmListar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jmListar.setText("Militares");
         jmListar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jmListarActionPerformed(evt);
@@ -127,6 +127,7 @@ public class FrameMain extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
     
     //passo o FrameCadastro como this para se referir ao conteudo do Frame Menu.
@@ -136,7 +137,7 @@ public class FrameMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jmCadastrarActionPerformed
    
     private void jmBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmBuscarActionPerformed
-       FrameBuscar framebuscar = new FrameBuscar(this);
+       FrameTarefas framebuscar = new FrameTarefas(this);
        framebuscar.setVisible(true);
     }//GEN-LAST:event_jmBuscarActionPerformed
 

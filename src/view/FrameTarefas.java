@@ -12,7 +12,7 @@ import model.Militar;
  * @author Luiz Ferreira
  * @since 26/08/2017
  */
-public class FrameBuscar extends javax.swing.JFrame {
+public class FrameTarefas extends javax.swing.JFrame {
     
     FrameMain parentFrame = null;
     Militar militarAtual = null;
@@ -32,11 +32,11 @@ public class FrameBuscar extends javax.swing.JFrame {
         checkBoxes.add(chkLevantarBandeira);
     }
     
-    public FrameBuscar() {
+    public FrameTarefas() {
         initComponents();
     }
     
-    public FrameBuscar(FrameMain militar){
+    public FrameTarefas(FrameMain militar){
          initComponents();
          setLocationRelativeTo(null);
          parentFrame = militar;
@@ -106,7 +106,9 @@ public class FrameBuscar extends javax.swing.JFrame {
         jbTarefaFeita = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setBackground(new java.awt.Color(164, 199, 158));
 
+        panelDadosMilitar.setBackground(new java.awt.Color(164, 199, 158));
         panelDadosMilitar.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED), "Dados do Militar", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Microsoft JhengHei Light", 1, 13), new java.awt.Color(51, 102, 0))); // NOI18N
 
         lblCodigo.setText("Código");
@@ -268,6 +270,7 @@ public class FrameBuscar extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        panelTarefas.setBackground(new java.awt.Color(164, 199, 158));
         panelTarefas.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED), "Quadro de Tarefas", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
         chkDescascarBatatas.setText("Descascar Batatas");
@@ -349,6 +352,7 @@ public class FrameBuscar extends javax.swing.JFrame {
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
+        panelPenalidades.setBackground(new java.awt.Color(164, 199, 158));
         panelPenalidades.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED), "Penalidades", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 0, 0))); // NOI18N
 
         jLabel8.setText("Grau 1");
@@ -406,6 +410,7 @@ public class FrameBuscar extends javax.swing.JFrame {
                     .addComponent(rbMulta)))
         );
 
+        panelAcoes.setBackground(new java.awt.Color(164, 199, 158));
         panelAcoes.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         jLabel1.setText("Data:");
@@ -501,6 +506,7 @@ public class FrameBuscar extends javax.swing.JFrame {
         panelPenalidades.getAccessibleContext().setAccessibleDescription("");
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
     
     //Botão Tarefa Feita faz com que a Tarefa de um Certo Militar seja Coloca tudo em False que significa "FEITO"=False  e Não Feito= "true"

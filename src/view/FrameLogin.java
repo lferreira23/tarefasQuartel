@@ -18,8 +18,9 @@ public class FrameLogin extends javax.swing.JFrame {
         initComponents();
         parentFrame.setEnabled(false);
         this.parentFrame = parentFrame;
+        getRootPane().setDefaultButton(btLogin);
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -36,10 +37,18 @@ public class FrameLogin extends javax.swing.JFrame {
         btLogin = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Entre com suas credenciais");
+        setBackground(new java.awt.Color(164, 199, 158));
+        setResizable(false);
+        addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
+            }
+        });
 
-        lblUsername.setText("Nome de usuário");
+        lblUsername.setText("Usuário:");
 
-        lblPassword.setText("Senha");
+        lblPassword.setText("Senha:");
 
         btLogin.setText("Entrar");
         btLogin.addActionListener(new java.awt.event.ActionListener() {
@@ -60,7 +69,7 @@ public class FrameLogin extends javax.swing.JFrame {
                     .addComponent(lblUsername, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tfUsername)
                     .addComponent(pfPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE))
-                .addContainerGap(108, Short.MAX_VALUE))
+                .addContainerGap(76, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -75,10 +84,11 @@ public class FrameLogin extends javax.swing.JFrame {
                 .addComponent(pfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btLogin)
-                .addContainerGap(119, Short.MAX_VALUE))
+                .addContainerGap(60, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLoginActionPerformed
@@ -90,9 +100,16 @@ public class FrameLogin extends javax.swing.JFrame {
             this.dispose();
         }
         else {
-            JOptionPane.showMessageDialog(null,"Nome de usuário ou senha errados","Aviso",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null,"Nome de usuário ou senha incorretos","Aviso",JOptionPane.WARNING_MESSAGE);
+            tfUsername.setText("");
+            pfPassword.setText("");
+            tfUsername.requestFocus();
         }
     }//GEN-LAST:event_btLoginActionPerformed
+
+    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formKeyPressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btLogin;

@@ -157,10 +157,15 @@ public class FrameCadastro extends javax.swing.JFrame {
         }
 
         try {
-            ftfRg.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##.###.###-#")));
+            ftfRg.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##.###.###-*")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        ftfRg.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ftfRgActionPerformed(evt);
+            }
+        });
 
         try {
             ftfNascimento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
@@ -627,6 +632,7 @@ public class FrameCadastro extends javax.swing.JFrame {
         panelDadosMilitar.getAccessibleContext().setAccessibleDescription("");
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
  //Função para Salvar o Militar no Array e também verifica se o Codigo do militar ja existe.
     private void copyCamposToMilitar(Militar militar) {
@@ -923,6 +929,10 @@ public class FrameCadastro extends javax.swing.JFrame {
     private void rbSoldadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbSoldadoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_rbSoldadoActionPerformed
+
+    private void ftfRgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ftfRgActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ftfRgActionPerformed
 
     private void updateCampoIdade() {
         String nascimento = ftfNascimento.getText();

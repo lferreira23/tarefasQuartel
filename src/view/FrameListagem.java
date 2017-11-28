@@ -30,10 +30,10 @@ public class FrameListagem extends javax.swing.JFrame {
                 militar.getPatente().getNome(),
                 militar.getCpf(),
                 militar.getRg(),
-                militar.getEstado()
+                militar.getNascimento(),
+                militar.getIdade()
             });
         }
-        
     }
 
     /**
@@ -49,18 +49,22 @@ public class FrameListagem extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         btVoltar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setBackground(new java.awt.Color(164, 199, 158));
 
         jTable1.setAutoCreateRowSorter(true);
+        jTable1.setBackground(new java.awt.Color(164, 199, 158));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Nome", "Sexo", "Patente", "CPF", "RG", "Nascimento"
+                "Nome", "Sexo", "Patente", "CPF", "RG", "Nascimento", "Idade"
             }
         ));
         jTable1.setToolTipText("");
+        jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        jTable1.setName("Militares Cadastrados:"); // NOI18N
         jScrollPane2.setViewportView(jTable1);
 
         btVoltar.setText("Voltar");
@@ -78,7 +82,7 @@ public class FrameListagem extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 658, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(304, 304, 304)
@@ -90,12 +94,13 @@ public class FrameListagem extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btVoltar)
                 .addContainerGap())
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btVoltarActionPerformed
