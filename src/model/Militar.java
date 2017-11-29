@@ -1,5 +1,10 @@
 package model;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+import java.util.Date;
+
 
 /**
  * Classe que define todas as informaçoes do militar
@@ -8,55 +13,40 @@ package model;
  */
 public class Militar {
 
-    private Integer codigo;
+    private int codigo;
     private String nome;
     private String cpf;
     private String rg;
     private String estado;
-    private String Sexo;
-    private String nascimento;
-    private String Soldado;
+    private char sexo;
+    private Date nascimento;
+    private EnumPatente patente;
+    private boolean tarefas[];
+    private int grauPenalidade;
+    
     private int idade;
-    private boolean Descascar;  
-    private boolean LimparBanheiro;
-    private boolean LimparCozinha;
-    private boolean CozinharArmoco;
-    private boolean CozinharJanta;
-    private boolean AlimentarCavalos;
-    private boolean LimparEstabulos;
-    private boolean RecarregarArmamento;
-    private boolean TrocarEncanamento;
-    private boolean LevantarBandeira;
-    private String  Penalidades;
-    private String  Patente;
-    private int     Contador;
-     public Militar(){
+    
+    //Encontrado na Internet
+    private void calcularIdade() {
+        LocalDate dataNascimento = nascimento.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        idade = Period.between(dataNascimento, LocalDate.now()).getYears();
+    }
+    
+    public Militar() {
+        this.tarefas = new boolean[EnumTarefa.values().length];
         
     }
 
-    public Militar(Integer codigo, String nome, String cpf, String rg, String estado, String Sexo, String nascimento, String Soldado, int idade, boolean Descascar, boolean LimparBanheiro, boolean LimparCozinha, boolean CozinharArmoco, boolean CozinharJanta, boolean AlimentarCavalos, boolean LimparEstabulos, boolean RecarregarArmamento, boolean TrocarEncanamento, boolean LevantarBandeira, String Penalidades, String Patente, int contador) {
+    public Militar(int codigo, String nome, String cpf, String rg, String estado, char sexo, Date nascimento, String Penalidades, EnumPatente patente) {        
         this.codigo = codigo;
         this.nome = nome;
         this.cpf = cpf;
         this.rg = rg;
         this.estado = estado;
-        this.Sexo = Sexo;
+        this.sexo = sexo;
         this.nascimento = nascimento;
-        this.Soldado = Soldado;
-        this.idade = idade;
-        this.Descascar = Descascar;
-        this.LimparBanheiro = LimparBanheiro;
-        this.LimparCozinha = LimparCozinha;
-        this.CozinharArmoco = CozinharArmoco;
-        this.CozinharJanta = CozinharJanta;
-        this.AlimentarCavalos = AlimentarCavalos;
-        this.LimparEstabulos = LimparEstabulos;
-        this.RecarregarArmamento = RecarregarArmamento;
-        this.TrocarEncanamento = TrocarEncanamento;
-        this.LevantarBandeira = LevantarBandeira;
-        this.Penalidades = Penalidades;
-        this.Patente = Patente;
-        this.Contador = contador;
+        this.tarefas = new boolean[EnumTarefa.values().length];
+        calcularIdade();
     }
 
     public Integer getCodigo() {
@@ -99,140 +89,49 @@ public class Militar {
         this.estado = estado;
     }
 
-    public String getSexo() {
-        return Sexo;
+    public char getSexo() {
+        return sexo;
     }
 
-    public void setSexo(String Sexo) {
-        this.Sexo = Sexo;
+    public void setSexo(char sexo) {
+        this.sexo = sexo;
     }
 
-    public String getNascimento() {
+    public Date getNascimento() {
         return nascimento;
     }
-
-    public void setNascimento(String nascimento) {
-        this.nascimento = nascimento;
-    }
-
-    public String getSoldado() {
-        return Soldado;
-    }
-
-    public void setSoldado(String Soldado) {
-        this.Soldado = Soldado;
-    }
-
+    
     public int getIdade() {
         return idade;
     }
 
-    public void setIdade(int idade) {
-        this.idade = idade;
+    public void setNascimento(Date nascimento) {
+        this.nascimento = nascimento;
+        calcularIdade();
+    }
+    
+    public void setPatente(EnumPatente patente) {
+        this.patente = patente;
+    }
+    
+    public EnumPatente getPatente() {
+        return patente;
     }
 
-    public boolean isDescascar() {
-        return Descascar;
+    public boolean fazAtividade(EnumTarefa tarefa) {
+        return tarefas[tarefa.ordinal()];
     }
-
-    public void setDescascar(boolean Descascar) {
-        this.Descascar = Descascar;
+    
+    public void setAtividade(EnumTarefa tarefa, boolean valor) {
+        this.tarefas[tarefa.ordinal()] = valor;
     }
-
-    public boolean isLimparBanheiro() {
-        return LimparBanheiro;
+    
+    public void setGrauPenalidade(int grauPenalidade) {
+        this.grauPenalidade = grauPenalidade;
     }
-
-    public void setLimparBanheiro(boolean LimparBanheiro) {
-        this.LimparBanheiro = LimparBanheiro;
+    
+    public int getGrauPenalidade() {
+        return grauPenalidade;
     }
-
-    public boolean isLimparCozinha() {
-        return LimparCozinha;
-    }
-
-    public void setLimparCozinha(boolean LimparCozinha) {
-        this.LimparCozinha = LimparCozinha;
-    }
-
-    public boolean isCozinharArmoco() {
-        return CozinharArmoco;
-    }
-
-    public void setCozinharArmoco(boolean CozinharArmoco) {
-        this.CozinharArmoco = CozinharArmoco;
-    }
-
-    public boolean isCozinharJanta() {
-        return CozinharJanta;
-    }
-
-    public void setCozinharJanta(boolean CozinharJanta) {
-        this.CozinharJanta = CozinharJanta;
-    }
-
-    public boolean isAlimentarCavalos() {
-        return AlimentarCavalos;
-    }
-
-    public void setAlimentarCavalos(boolean AlimentarCavalos) {
-        this.AlimentarCavalos = AlimentarCavalos;
-    }
-
-    public boolean isLimparEstabulos() {
-        return LimparEstabulos;
-    }
-
-    public void setLimparEstabulos(boolean LimparEstabulos) {
-        this.LimparEstabulos = LimparEstabulos;
-    }
-
-    public boolean isRecarregarArmamento() {
-        return RecarregarArmamento;
-    }
-
-    public void setRecarregarArmamento(boolean RecarregarArmamento) {
-        this.RecarregarArmamento = RecarregarArmamento;
-    }
-
-    public boolean isTrocarEncanamento() {
-        return TrocarEncanamento;
-    }
-
-    public void setTrocarEncanamento(boolean TrocarEncanamento) {
-        this.TrocarEncanamento = TrocarEncanamento;
-    }
-
-    public boolean isLevantarBandeira() {
-        return LevantarBandeira;
-    }
-
-    public void setLevantarBandeira(boolean LevantarBandeira) {
-        this.LevantarBandeira = LevantarBandeira;
-    }
-
-    public String getPenalidades() {
-        return Penalidades;
-    }
-
-    public void setPenalidades(String Penalidades) {
-        this.Penalidades = Penalidades;
-    }
-
-    public String getPatente() {
-        return Patente;
-    }
-
-    public void setPatente(String Patente) {
-        this.Patente = Patente;
-    }
-
-    public int getContador() {
-        return Contador;
-    }
-
-    public void setContador(int contador) {
-        this.Contador = contador;
-    }
-     
+    
 }

@@ -1,14 +1,15 @@
 package view;
 
 
-import controller.Altera;
-import controller.Busca;
-import controller.Cadastra;
-import java.sql.SQLException;
-import model.Militar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import controller.MilitarController;
+import controller.Utils;
+import java.awt.event.ItemEvent;
+import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.JOptionPane;
+import model.Militar;
+import model.EnumPatente;
+import model.EnumTarefa;
 
 /**
  * Frame para o Cadastro do Militar e Edição do mesmo
@@ -16,44 +17,164 @@ import javax.swing.JOptionPane;
  * @since 26/08/2017
  */
 public class FrameCadastro extends javax.swing.JFrame {
-    FrameMenu menu = new FrameMenu();
-    Militar militar = new Militar();
-     int codigoGlobal = 0;
+    FrameMain parentFrame = null;
+    Militar militarAtual = null;
     
+    private ArrayList<javax.swing.JRadioButton> radioButtons = new ArrayList<>();
+    private ArrayList<javax.swing.JCheckBox> checkBoxes = new ArrayList<>();
+    private ArrayList<javax.swing.JComponent> notNull = new ArrayList<>();
    
-    public FrameCadastro() {
-        initComponents();
+    private void initComponentLists() {
+        radioButtons.add(rbSoldado);
+        radioButtons.add(rbCabo);
+        radioButtons.add(rbTerceiroSargento);
+        radioButtons.add(rbSegundoSargento);
+        radioButtons.add(rbPrimeiroSargento);
+        radioButtons.add(rbSubtenente);
+        radioButtons.add(rbAspirante);
+        radioButtons.add(rbSegundoTenente);
+        radioButtons.add(rbPrimeiroTenente);
+        radioButtons.add(rbCapitao);
+        
+        checkBoxes.add(chkDescascarBatatas);
+        checkBoxes.add(chkLimparBanheiro);
+        checkBoxes.add(chkLimparCozinha);
+        checkBoxes.add(chkCozinharAlmoco);
+        checkBoxes.add(chkCozinharJanta);
+        checkBoxes.add(chkAlimentarCavalos);
+        checkBoxes.add(chkLimparEstabulos);
+        checkBoxes.add(chkRecarregar);
+        checkBoxes.add(chkTrocarEncanamento);
+        checkBoxes.add(chkLevantarBandeira);
+        
+        notNull.add(tfNome);
+        notNull.add(ftfCpf);
+        notNull.add(ftfRg);
+        notNull.add(ftfNascimento);
     }
     
-    public FrameCadastro(FrameMenu militar){
-         initComponents();
-         setLocationRelativeTo(null);
-         menu = militar;
-        
+   private void updateCampoIdade() {
+        String nascimento = ftfNascimento.getText();
+        Date date = Utils.stringToDate(nascimento);
+        int idade = Utils.getAgeInYears(date);
+        tfIdade.setText(""+idade);
     }
     
-    //Deixei como publico pra ve se vai funciona
-
-
-//deixei como publico mas era private
- /* private void listarTodosClientesArray(){
-        
-        for(int i=0;i<sold.size(); i++){
-            
-            System.out.println("Nome: " + milit.get(i).getNome());
-            System.out.println("codigo: "+milit.get(i).getCodigo()+"\n");            
-            System.out.println("Alimentar"+milit.get(i).isAlimentarCavalos());
-            System.out.println("CozinharARMOCO"+milit.get(i).isCozinharArmoco());
-            System.out.println("COzinharJANTA"+milit.get(i).isCozinharJanta());
-            System.out.println("DESCANCAR"+milit.get(i).isDescascar());
-            System.out.println("BANDEIRA"+milit.get(i).isLevantarBandeira());
-            System.out.println("LIMPARCOZINHA"+milit.get(i).isLimparCozinha());
-            System.out.println("LimparEstabulos"+milit.get(i).isLimparEstabulos());
-            System.out.println("RECARREGAR"+milit.get(i).isRecarregarArmamento());
-            System.out.println("ENCANAMENTO"+milit.get(i).isTrocarEncanamento());
-            
+    private boolean validarCPF(String cpf) {
+        String rawCpf = cpf.replaceAll("[-.]","");
+        return Utils.validarCPF(rawCpf);
+    }
+    
+    private boolean validarCampos() {
+        boolean result = true;
+        for(javax.swing.JComponent c : notNull) {
+            if(c instanceof javax.swing.JFormattedTextField) {
+                String value = ((javax.swing.JFormattedTextField)c).getText();
+                value = value.replaceAll("[-./]", "");
+                if(value == null || value.trim().equals("")) {
+                    result = false;
+                    break;
+                }
+            }
+            else if(c instanceof javax.swing.JTextField) {
+                String text = ((javax.swing.JTextField)c).getText();
+                if(text.trim().equals("")) {
+                    result = false;
+                    break;
+                }               
+            }
         }
         
+        if(buttonGroup1.getSelection() == null)
+            result = false;
+        if(buttonGroup2.getSelection() == null)
+            result = false;
+        
+        if(cbEstado.getSelectedIndex() == -1)
+            result = false;
+        
+        if(!result) {
+            JOptionPane.showMessageDialog(null, "Campos com * devem ser preenchidos obrigatoriamente", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        
+        String cpf = ftfCpf.getText();
+        if(!validarCPF(cpf)) {
+            JOptionPane.showMessageDialog(null, "CPF inválido", "Aviso", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        return result;
+    }
+    
+    private void limparTarefas() {
+        for(javax.swing.JCheckBox c : checkBoxes) {
+            c.setSelected(false);
+            c.setEnabled(false);
+        }
+    }
+    
+    //limpa os campos de cadastro 
+    private void limparCampos(){
+        tfCodigo.setText("");  
+        tfNome.setText("");
+        ftfCpf.setText("");
+        ftfRg.setText("");
+        ftfNascimento.setText("");
+        tfIdade.setText("");
+        cbEstado.setSelectedIndex(-1);
+        buttonGroup1.clearSelection();
+        buttonGroup2.clearSelection();
+        limparTarefas();
+        btEditarMilitar.setEnabled(false);
+        btExcluirMilitar.setEnabled(false);
+    }
+    
+//Função para Salvar o Militar no Array e também verifica se o Codigo do militar ja existe.
+    private void copyCamposToMilitar(Militar militar) {
+        
+        militar.setNome(tfNome.getText());
+        militar.setCpf(ftfCpf.getText());
+        militar.setRg(ftfRg.getText());
+        militar.setEstado((String) cbEstado.getSelectedItem());
+        militar.setSexo(rbMasculino.isSelected()?'M':'F');
+        militar.setNascimento(Utils.stringToDate(ftfNascimento.getText()));
+        for(int i = 0; i < radioButtons.size(); i++) {
+            if(radioButtons.get(i).isSelected()) {
+                militar.setPatente(EnumPatente.values()[i]);
+                break;
+            }
+        }
+
+        for(int i = 0; i < checkBoxes.size(); i++) {
+            javax.swing.JCheckBox chk = checkBoxes.get(i);
+            if(chk.isEnabled())
+                militar.setAtividade(EnumTarefa.values()[i], chk.isSelected());
+        }
+    }
+    
+    private void setCamposFromMilitar(Militar militar) {
+        tfCodigo.setText("" + militar.getCodigo());
+        tfNome.setText(militar.getNome());
+        ftfCpf.setText(militar.getCpf());
+        ftfRg.setText(militar.getRg());
+        cbEstado.setSelectedItem(militar.getEstado());
+        rbMasculino.setSelected(militar.getSexo() == 'M');
+        rbFeminino.setSelected(militar.getSexo() == 'F');
+        ftfNascimento.setText(Utils.dateToString(militar.getNascimento()));
+        radioButtons.get(militar.getPatente().ordinal()).setSelected(true);
+        updateCampoIdade();
+        for(int i = 0; i < checkBoxes.size(); i++) {
+            if(checkBoxes.get(i).isEnabled())
+                checkBoxes.get(i).setSelected(militar.fazAtividade(EnumTarefa.values()[i]));
+        }
+    }
+    
+    public FrameCadastro(FrameMain parentFrame){
+        initComponents();
+        initComponentLists();
+        setLocationRelativeTo(null);
+        this.parentFrame = parentFrame;
     }
    
     /**
@@ -67,7 +188,7 @@ public class FrameCadastro extends javax.swing.JFrame {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
-        JpDadosMilitar = new javax.swing.JPanel();
+        panelDadosMilitar = new javax.swing.JPanel();
         LbCodigo = new javax.swing.JLabel();
         LbNome = new javax.swing.JLabel();
         LbSexo = new javax.swing.JLabel();
@@ -76,12 +197,11 @@ public class FrameCadastro extends javax.swing.JFrame {
         LbNascimento = new javax.swing.JLabel();
         LbIdade = new javax.swing.JLabel();
         LbEstado = new javax.swing.JLabel();
-        ftfCodigo = new javax.swing.JFormattedTextField();
+        tfCodigo = new javax.swing.JTextField();
         tfNome = new javax.swing.JTextField();
         ftfCpf = new javax.swing.JFormattedTextField();
         ftfRg = new javax.swing.JFormattedTextField();
         ftfNascimento = new javax.swing.JFormattedTextField();
-        ftfIdade = new javax.swing.JFormattedTextField();
         rbMasculino = new javax.swing.JRadioButton();
         rbFeminino = new javax.swing.JRadioButton();
         cbEstado = new javax.swing.JComboBox<>();
@@ -106,7 +226,8 @@ public class FrameCadastro extends javax.swing.JFrame {
         lbCapitao = new javax.swing.JLabel();
         rbCapitao = new javax.swing.JRadioButton();
         LbSexo1 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
+        tfIdade = new javax.swing.JTextField();
+        panelTarefas = new javax.swing.JPanel();
         chkDescascarBatatas = new javax.swing.JCheckBox();
         chkLimparBanheiro = new javax.swing.JCheckBox();
         chkLimparCozinha = new javax.swing.JCheckBox();
@@ -117,40 +238,35 @@ public class FrameCadastro extends javax.swing.JFrame {
         chkRecarregar = new javax.swing.JCheckBox();
         chkTrocarEncanamento = new javax.swing.JCheckBox();
         chkLevantarBandeira = new javax.swing.JCheckBox();
-        jPanel1 = new javax.swing.JPanel();
-        jbCadastrarTarefa = new javax.swing.JButton();
+        panelOpcoes = new javax.swing.JPanel();
+        btCadastrarMilitar = new javax.swing.JButton();
         btVoltar = new javax.swing.JButton();
-        btEditar = new javax.swing.JButton();
-        BtBuscarSoldado = new javax.swing.JButton();
-        btSalvar = new javax.swing.JButton();
+        btEditarMilitar = new javax.swing.JButton();
+        btBuscarMilitar = new javax.swing.JButton();
+        btExcluirMilitar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Cadastro de Militar");
         setBackground(new java.awt.Color(0, 102, 0));
 
-        JpDadosMilitar.setBackground(new java.awt.Color(164, 199, 158));
-        JpDadosMilitar.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED), "Dados do Militar", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Microsoft JhengHei Light", 1, 13), new java.awt.Color(51, 102, 0))); // NOI18N
+        panelDadosMilitar.setBackground(new java.awt.Color(164, 199, 158));
+        panelDadosMilitar.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED), "Dados do Militar", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Microsoft JhengHei Light", 1, 13), new java.awt.Color(51, 102, 0))); // NOI18N
 
         LbCodigo.setText("Código:");
 
-        LbNome.setText("Nome:");
+        LbNome.setText("Nome*");
 
-        LbSexo.setText("Sexo:");
+        LbSexo.setText("Sexo*");
 
-        LbCpf.setText("CPF:");
+        LbCpf.setText("CPF*");
 
-        LbRg.setText("RG:");
+        LbRg.setText("RG*");
 
-        LbNascimento.setText("Nascimento:");
+        LbNascimento.setText("Nascimento*");
 
         LbIdade.setText("Idade:");
 
-        LbEstado.setText("Estado:");
-
-        try {
-            ftfCodigo.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("######")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
+        LbEstado.setText("Estado*");
 
         try {
             ftfCpf.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-##")));
@@ -159,7 +275,7 @@ public class FrameCadastro extends javax.swing.JFrame {
         }
 
         try {
-            ftfRg.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##.###.###-#")));
+            ftfRg.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##.###.###-*")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
@@ -169,12 +285,11 @@ public class FrameCadastro extends javax.swing.JFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-
-        try {
-            ftfIdade.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
+        ftfNascimento.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                ftfNascimentoFocusLost(evt);
+            }
+        });
 
         buttonGroup2.add(rbMasculino);
         rbMasculino.setText("Masculino");
@@ -193,6 +308,11 @@ public class FrameCadastro extends javax.swing.JFrame {
 
         buttonGroup1.add(rbSoldado);
         rbSoldado.setText("Soldado");
+        rbSoldado.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbSoldadoItemStateChanged(evt);
+            }
+        });
         rbSoldado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rbSoldadoActionPerformed(evt);
@@ -203,9 +323,9 @@ public class FrameCadastro extends javax.swing.JFrame {
 
         buttonGroup1.add(rbCabo);
         rbCabo.setText("Cabo");
-        rbCabo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbCaboActionPerformed(evt);
+        rbCabo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbCaboItemStateChanged(evt);
             }
         });
 
@@ -215,9 +335,9 @@ public class FrameCadastro extends javax.swing.JFrame {
 
         buttonGroup1.add(rbTerceiroSargento);
         rbTerceiroSargento.setText("3º Sargento");
-        rbTerceiroSargento.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbTerceiroSargentoActionPerformed(evt);
+        rbTerceiroSargento.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbTerceiroSargentoItemStateChanged(evt);
             }
         });
 
@@ -225,9 +345,9 @@ public class FrameCadastro extends javax.swing.JFrame {
 
         buttonGroup1.add(rbSegundoSargento);
         rbSegundoSargento.setText("2º Sargento");
-        rbSegundoSargento.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbSegundoSargentoActionPerformed(evt);
+        rbSegundoSargento.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbSegundoSargentoItemStateChanged(evt);
             }
         });
 
@@ -237,35 +357,35 @@ public class FrameCadastro extends javax.swing.JFrame {
 
         buttonGroup1.add(rbSubtenente);
         rbSubtenente.setText("Subtenente");
-        rbSubtenente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbSubtenenteActionPerformed(evt);
+        rbSubtenente.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbSubtenenteItemStateChanged(evt);
             }
         });
 
         buttonGroup1.add(rbAspirante);
         rbAspirante.setText("Aspirante");
-        rbAspirante.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbAspiranteActionPerformed(evt);
+        rbAspirante.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbAspiranteItemStateChanged(evt);
             }
         });
 
         buttonGroup1.add(rbSegundoTenente);
         rbSegundoTenente.setText("2º Tenente");
-        rbSegundoTenente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbSegundoTenenteActionPerformed(evt);
+        rbSegundoTenente.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbSegundoTenenteItemStateChanged(evt);
             }
         });
 
-        lbPrimeiroSargento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Icon_05_Primeiro-Sargento..png"))); // NOI18N
+        lbPrimeiroSargento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Icon_05_Primeiro-Sargento.png"))); // NOI18N
 
         buttonGroup1.add(rbPrimeiroSargento);
         rbPrimeiroSargento.setText("1º Sargento");
-        rbPrimeiroSargento.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbPrimeiroSargentoActionPerformed(evt);
+        rbPrimeiroSargento.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbPrimeiroSargentoItemStateChanged(evt);
             }
         });
 
@@ -273,9 +393,9 @@ public class FrameCadastro extends javax.swing.JFrame {
 
         buttonGroup1.add(rbPrimeiroTenente);
         rbPrimeiroTenente.setText("1º Tenente");
-        rbPrimeiroTenente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbPrimeiroTenenteActionPerformed(evt);
+        rbPrimeiroTenente.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbPrimeiroTenenteItemStateChanged(evt);
             }
         });
 
@@ -283,108 +403,117 @@ public class FrameCadastro extends javax.swing.JFrame {
 
         buttonGroup1.add(rbCapitao);
         rbCapitao.setText("Capitão");
-        rbCapitao.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbCapitaoActionPerformed(evt);
+        rbCapitao.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbCapitaoItemStateChanged(evt);
             }
         });
 
-        LbSexo1.setText("Patente:");
+        LbSexo1.setText("Patente*");
 
-        javax.swing.GroupLayout JpDadosMilitarLayout = new javax.swing.GroupLayout(JpDadosMilitar);
-        JpDadosMilitar.setLayout(JpDadosMilitarLayout);
-        JpDadosMilitarLayout.setHorizontalGroup(
-            JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(JpDadosMilitarLayout.createSequentialGroup()
+        tfIdade.setEnabled(false);
+        tfIdade.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfIdadeActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelDadosMilitarLayout = new javax.swing.GroupLayout(panelDadosMilitar);
+        panelDadosMilitar.setLayout(panelDadosMilitarLayout);
+        panelDadosMilitarLayout.setHorizontalGroup(
+            panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelDadosMilitarLayout.createSequentialGroup()
+                .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelDadosMilitarLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelDadosMilitarLayout.createSequentialGroup()
+                                .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lbSoldado)
                                     .addComponent(rbSoldado)
                                     .addComponent(lbSubtenente)
                                     .addComponent(rbSubtenente))
                                 .addGap(18, 18, 18)
-                                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lbCabo)
                                     .addComponent(rbCabo)
                                     .addComponent(lbAspirante)
                                     .addComponent(rbAspirante))
                                 .addGap(18, 18, 18)
-                                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lbTerceiroSargento)
                                     .addComponent(rbTerceiroSargento)
                                     .addComponent(lbSegundoTenente)
                                     .addComponent(rbSegundoTenente)))
                             .addComponent(LbSexo1))
                         .addGap(18, 18, 18)
-                        .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbSegundoSargento)
                             .addComponent(rbSegundoSargento)
                             .addComponent(lbPrimeiroTenente)
                             .addComponent(rbPrimeiroTenente))
                         .addGap(18, 18, 18)
-                        .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbPrimeiroSargento)
                             .addComponent(rbPrimeiroSargento)
                             .addComponent(lbCapitao)
                             .addComponent(rbCapitao)))
-                    .addGroup(JpDadosMilitarLayout.createSequentialGroup()
+                    .addGroup(panelDadosMilitarLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                                .addComponent(LbNome)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(tfNome, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                                .addComponent(LbCodigo)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ftfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
+                        .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelDadosMilitarLayout.createSequentialGroup()
                                 .addComponent(LbSexo)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(rbMasculino)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(rbFeminino, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(rbFeminino, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panelDadosMilitarLayout.createSequentialGroup()
+                                .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(LbNome)
+                                    .addComponent(LbCodigo))
+                                .addGap(3, 3, 3)
+                                .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(tfNome, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                                    .addComponent(tfCodigo))))
                         .addGap(18, 18, 18)
-                        .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                                .addComponent(LbCpf)
+                        .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(panelDadosMilitarLayout.createSequentialGroup()
+                                .addComponent(LbNascimento)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ftfCpf))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpDadosMilitarLayout.createSequentialGroup()
+                                .addComponent(ftfNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDadosMilitarLayout.createSequentialGroup()
                                 .addComponent(LbRg)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(ftfRg, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
-                                .addComponent(LbNascimento)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ftfNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(panelDadosMilitarLayout.createSequentialGroup()
+                                .addComponent(LbCpf)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(ftfCpf, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
-                        .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(LbEstado)
-                            .addComponent(LbIdade))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ftfIdade)
-                            .addComponent(cbEstado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelDadosMilitarLayout.createSequentialGroup()
+                                .addComponent(LbEstado)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbEstado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(panelDadosMilitarLayout.createSequentialGroup()
+                                .addComponent(LbIdade)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(tfIdade)))))
                 .addContainerGap())
         );
-        JpDadosMilitarLayout.setVerticalGroup(
-            JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(JpDadosMilitarLayout.createSequentialGroup()
+        panelDadosMilitarLayout.setVerticalGroup(
+            panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelDadosMilitarLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(LbCodigo)
                     .addComponent(LbCpf)
                     .addComponent(LbIdade)
-                    .addComponent(ftfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ftfCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ftfIdade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfIdade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(LbNome)
                     .addComponent(LbRg)
                     .addComponent(tfNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -392,41 +521,41 @@ public class FrameCadastro extends javax.swing.JFrame {
                     .addComponent(LbEstado)
                     .addComponent(cbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(7, 7, 7)
-                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(LbSexo)
                     .addComponent(LbNascimento)
                     .addComponent(ftfNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(rbMasculino)
                     .addComponent(rbFeminino))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
-                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbPrimeiroSargento, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lbTerceiroSargento, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(lbCabo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(JpDadosMilitarLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelDadosMilitarLayout.createSequentialGroup()
                             .addComponent(LbSexo1)
                             .addGap(13, 13, 13)
                             .addComponent(lbSoldado))
                         .addComponent(lbSegundoSargento)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(rbSoldado)
                     .addComponent(rbCabo)
                     .addComponent(rbTerceiroSargento)
                     .addComponent(rbSegundoSargento)
                     .addComponent(rbPrimeiroSargento))
                 .addGap(18, 18, 18)
-                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbSubtenente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbAspirante, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbSegundoTenente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbPrimeiroTenente, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbCapitao))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(JpDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(panelDadosMilitarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(rbSubtenente)
                     .addComponent(rbAspirante)
                     .addComponent(rbSegundoTenente)
@@ -435,8 +564,8 @@ public class FrameCadastro extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jPanel2.setBackground(new java.awt.Color(164, 199, 158));
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED), "Quadro de Tarefas", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        panelTarefas.setBackground(new java.awt.Color(164, 199, 158));
+        panelTarefas.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED), "Quadro de Tarefas", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(51, 102, 0))); // NOI18N
 
         chkDescascarBatatas.setText("Descascar Batatas");
         chkDescascarBatatas.setEnabled(false);
@@ -468,62 +597,62 @@ public class FrameCadastro extends javax.swing.JFrame {
         chkLevantarBandeira.setText("Levantar Bandeira");
         chkLevantarBandeira.setEnabled(false);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelTarefasLayout = new javax.swing.GroupLayout(panelTarefas);
+        panelTarefas.setLayout(panelTarefasLayout);
+        panelTarefasLayout.setHorizontalGroup(
+            panelTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTarefasLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(chkDescascarBatatas)
                     .addComponent(chkLimparBanheiro)
                     .addComponent(chkCozinharAlmoco)
                     .addComponent(chkLimparCozinha))
                 .addGap(59, 59, 59)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(chkLimparEstabulos)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelTarefasLayout.createSequentialGroup()
+                        .addGroup(panelTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(chkCozinharJanta)
                             .addComponent(chkAlimentarCavalos))
                         .addGap(43, 43, 43)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(chkTrocarEncanamento)
                             .addComponent(chkLevantarBandeira)))
                     .addComponent(chkRecarregar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        panelTarefasLayout.setVerticalGroup(
+            panelTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTarefasLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(panelTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chkDescascarBatatas)
                     .addComponent(chkCozinharJanta)
                     .addComponent(chkTrocarEncanamento))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(panelTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chkLimparBanheiro)
                     .addComponent(chkAlimentarCavalos)
                     .addComponent(chkLevantarBandeira))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(chkLimparCozinha)
                     .addComponent(chkLimparEstabulos))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(panelTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chkCozinharAlmoco)
                     .addComponent(chkRecarregar))
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
-        jPanel1.setBackground(new java.awt.Color(164, 199, 158));
-        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 102, 0)));
+        panelOpcoes.setBackground(new java.awt.Color(164, 199, 158));
+        panelOpcoes.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 102, 0)));
 
-        jbCadastrarTarefa.setText("Cadastrar ");
-        jbCadastrarTarefa.addActionListener(new java.awt.event.ActionListener() {
+        btCadastrarMilitar.setText("Cadastrar ");
+        btCadastrarMilitar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbCadastrarTarefaActionPerformed(evt);
+                btCadastrarMilitarActionPerformed(evt);
             }
         });
 
@@ -534,56 +663,56 @@ public class FrameCadastro extends javax.swing.JFrame {
             }
         });
 
-        btEditar.setText("Editar");
-        btEditar.setEnabled(false);
-        btEditar.addActionListener(new java.awt.event.ActionListener() {
+        btEditarMilitar.setText("Editar");
+        btEditarMilitar.setEnabled(false);
+        btEditarMilitar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btEditarActionPerformed(evt);
+                btEditarMilitarActionPerformed(evt);
             }
         });
 
-        BtBuscarSoldado.setText("Buscar Militar");
-        BtBuscarSoldado.addActionListener(new java.awt.event.ActionListener() {
+        btBuscarMilitar.setText("Buscar");
+        btBuscarMilitar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtBuscarSoldadoActionPerformed(evt);
+                btBuscarMilitarActionPerformed(evt);
             }
         });
 
-        btSalvar.setText("Salvar");
-        btSalvar.setEnabled(false);
-        btSalvar.addActionListener(new java.awt.event.ActionListener() {
+        btExcluirMilitar.setText("Excluir");
+        btExcluirMilitar.setEnabled(false);
+        btExcluirMilitar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btSalvarActionPerformed(evt);
+                btExcluirMilitarActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelOpcoesLayout = new javax.swing.GroupLayout(panelOpcoes);
+        panelOpcoes.setLayout(panelOpcoesLayout);
+        panelOpcoesLayout.setHorizontalGroup(
+            panelOpcoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOpcoesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jbCadastrarTarefa, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btCadastrarMilitar, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(BtBuscarSoldado)
-                .addGap(18, 18, 18)
+                .addComponent(btBuscarMilitar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btEditarMilitar, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btExcluirMilitar, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        panelOpcoesLayout.setVerticalGroup(
+            panelOpcoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOpcoesLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btEditar)
-                    .addComponent(btSalvar)
-                    .addComponent(jbCadastrarTarefa)
-                    .addComponent(BtBuscarSoldado)
-                    .addComponent(btVoltar))
+                .addGroup(panelOpcoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btEditarMilitar)
+                    .addComponent(btCadastrarMilitar)
+                    .addComponent(btBuscarMilitar)
+                    .addComponent(btVoltar)
+                    .addComponent(btExcluirMilitar))
                 .addGap(51, 51, 51))
         );
 
@@ -594,614 +723,214 @@ public class FrameCadastro extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelOpcoes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(JpDadosMilitar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(panelDadosMilitar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(panelTarefas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(JpDadosMilitar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelDadosMilitar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelTarefas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelOpcoes, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        JpDadosMilitar.getAccessibleContext().setAccessibleDescription("");
+        panelDadosMilitar.getAccessibleContext().setAccessibleDescription("");
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
- //Função para Salvar o Militar no Array e também verifica se o Codigo do militar ja existe.
-    private void salvarMilitar() throws ClassNotFoundException {
-        Militar milit = new Militar();
-        
-        milit.setCodigo(Integer.parseInt(ftfCodigo.getText()));
-        milit.setNome(tfNome.getText());
-        milit.setCpf(ftfCpf.getText());
-        milit.setRg(ftfRg.getText());
-        milit.setEstado((String) cbEstado.getSelectedItem());
-        milit.setSexo(rbMasculino.isSelected()?"Masculino":"Feminino");
-        milit.setNascimento(ftfNascimento.getText());
-        milit.setIdade(Integer.parseInt(ftfIdade.getText()));
-        if(rbCapitao.isSelected()){
-            milit.setPatente("Capitão");
-        }
-        else if(rbPrimeiroTenente.isSelected()){
-            milit.setPatente("PrimeiroTenente");
-        }
-        else if(rbSegundoTenente.isSelected()){
-            milit.setPatente("SegundoTenente");
-        }
-        else if(rbAspirante.isSelected()){
-            milit.setPatente("Aspirante");
-        }
-        else if(rbSubtenente.isSelected()){
-            milit.setPatente("Subtenente");
-        }
-        else if(rbPrimeiroSargento.isSelected()){
-            milit.setPatente("PrimeiroSargento");
-        }
-        else if(rbSegundoSargento.isSelected()){
-            milit.setPatente("SegundoSargento");
-        }
-        else if(rbTerceiroSargento.isSelected()){
-            milit.setPatente("TerceiroSargento");
-        }
-        else if(rbCabo.isSelected()){
-            milit.setPatente("Cabo");
-        }
-        else if(rbSoldado.isSelected()){
-            milit.setPatente("Soldado");
-        }
-        milit.setDescascar(chkDescascarBatatas.isSelected());
-        milit.setLimparBanheiro(chkLimparBanheiro.isSelected());
-        milit.setLimparCozinha(chkLimparCozinha.isSelected());
-        milit.setCozinharArmoco(chkCozinharAlmoco.isSelected());
-        milit.setCozinharJanta(chkCozinharJanta.isSelected());
-        milit.setAlimentarCavalos(chkAlimentarCavalos.isSelected());
-        milit.setLimparEstabulos(chkLimparEstabulos.isSelected());
-        milit.setRecarregarArmamento(chkRecarregar.isSelected());
-        milit.setTrocarEncanamento(chkTrocarEncanamento.isSelected());
-        milit.setLevantarBandeira(chkLevantarBandeira.isSelected());
-        
-        //verificarCodigo(militar);
-        
-        try {
-            Cadastra.receberMilitar(milit);
-        } catch (SQLException ex) {
-            Logger.getLogger(FrameCadastro.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
-    }
-     //Primeira Metodo que usei para Salvar o Militar SOMENTE, sem as CHeckBox
-     private void salvarSold() {
-        militar = new Militar();
-        militar.setNome(tfNome.getText());
-        militar.setCodigo(Integer.parseInt(ftfCodigo.getText()));
-        militar.setCpf(ftfCpf.getText());
-        militar.setRg(ftfRg.getText());
-        militar.setEstado((String) cbEstado.getSelectedItem());
-        militar.setSexo(rbMasculino.isSelected()?"Masculino":"Feminino");
-        militar.setNascimento(ftfNascimento.getText());
-        militar.setIdade(Integer.parseInt(ftfIdade.getText()));
-       
-        
-        
-        verificarNada(militar);
-        
-    }
-    
-     //Verificação do Codigo do militar para ver se ele existe se não ele nao cadastra.
-//    private void verificarCodigo(Militar militar) {
-//        int cont = 0;
-//        for(int i=0;i<menu.sold.size();i++){
-//            if(Integer.parseInt(ftfCodigo.getText()) == (menu.sold.get(i).getCodigo())){
-//                JOptionPane.showMessageDialog(null, "Codigo ja cadastrado");
-//                cont++;
-//            }
-//        }
-//        if(cont == 0 ){
-//            inserirMilitar(militar);
-//            JOptionPane.showMessageDialog(null,"Militar Inserido");
-//            limparCamposFrame();
-//        }
-//    }
-    
-    //Metodo para inserção sem Verificação.
-    private void verificarNada(Militar militar) {
-       
-        
-        
-            inserirMilitar(militar);
-            JOptionPane.showMessageDialog(null,"Militar Inserido");
-            limparCamposFrame();
-        
-    }
-     //Metodo que insere o Militar no ArrayList
-     private void inserirMilitar(Militar militar) {
-        
-         menu.salvarSoldado(militar);
-    } 
+ 
      //Metodo que Cadastra o Militar Inteiro.
-    private void jbCadastrarTarefaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCadastrarTarefaActionPerformed
-         
-        try {
-            /*
-            militar.setDescascar(chkDescascarBatatas.isSelected());
-            militar.setLimparBanheiro(chkLimparBanheiro.isSelected());
-            militar.setLimparCozinha(chkLimparCozinha.isSelected());
-            militar.setCozinharArmoco(chkCozinharAlmoco.isSelected());
-            militar.setCozinharJanta(chkCozinharJanta.isSelected());
-            militar.setAlimentarCavalos(chkAlimentarCavalos.isSelected());
-            militar.setLimparEstabulos(chkLimparEstabulos.isSelected());
-            militar.setRecarregarArmamento(chkRecarregar.isSelected());
-            militar.setTrocarEncanamento(chkTrocarEncanamento.isSelected());
-            militar.setLevantarBandeira(chkLevantarBandeira.isSelected());
-            */ 
-            salvarMilitar();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(FrameCadastro.class.getName()).log(Level.SEVERE, null, ex);
+    private void btCadastrarMilitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCadastrarMilitarActionPerformed
+        if(validarCampos()) {
+            Militar militar = new Militar();
+            copyCamposToMilitar(militar);
+            MilitarController.CadastrarMilitar(militar);
+            limparCampos();
         }
-        
-        
-
-       //inserirSoldado(militar);
-        
-        //limpar campos e inabilitar
-        rbSegundoTenente.setEnabled(true);
-        rbAspirante.setEnabled(true);
-        rbSubtenente.setEnabled(true);
-        rbSegundoSargento.setEnabled(true);
-        rbTerceiroSargento.setEnabled(true);
-        rbCabo.setEnabled(true);
-        chkDescascarBatatas.setEnabled(false);
-        chkLimparBanheiro.setEnabled(false);
-        chkLimparCozinha.setEnabled(false);
-        chkLimparEstabulos.setEnabled(false);
-        chkRecarregar.setEnabled(false);
-        chkAlimentarCavalos.setEnabled(false);
-        chkCozinharAlmoco.setEnabled(false);
-        chkCozinharJanta.setEnabled(false);
-        chkTrocarEncanamento.setEnabled(false);
-        chkLevantarBandeira.setEnabled(false);
-        //insererClienteArray(militar);
-        limparCamposFrame();
-
-    }//GEN-LAST:event_jbCadastrarTarefaActionPerformed
+    }//GEN-LAST:event_btCadastrarMilitarActionPerformed
 
     private void rbMasculinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbMasculinoActionPerformed
 
     }//GEN-LAST:event_rbMasculinoActionPerformed
-     //METODOS PARA ENABLES DE PATENTE
-    private void rbSoldadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbSoldadoActionPerformed
-            militar.setPatente("Soldado");
-            chkDescascarBatatas.setEnabled(true);
-            chkLimparBanheiro.setEnabled(true);
-            chkLimparCozinha.setEnabled(true);
-            chkLimparEstabulos.setEnabled(true);
-            chkRecarregar.setEnabled(false);
-            chkAlimentarCavalos.setEnabled(false);
-            chkCozinharAlmoco.setEnabled(false);
-            chkCozinharJanta.setEnabled(false);
-            chkTrocarEncanamento.setEnabled(false);
-            chkLevantarBandeira.setEnabled(false);
-    }//GEN-LAST:event_rbSoldadoActionPerformed
 
     private void btVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btVoltarActionPerformed
        dispose();
     }//GEN-LAST:event_btVoltarActionPerformed
 
        //Botão editar que abre alguns campos para edição
-    private void btEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditarActionPerformed
-        
-      
-        ftfCpf.setEditable(true);
-        ftfRg.setEditable(true);
-        jbCadastrarTarefa.setEnabled(false);
-        btSalvar.setEnabled(true);
-        
-        
-    }//GEN-LAST:event_btEditarActionPerformed
-    
+    private void btEditarMilitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditarMilitarActionPerformed
+      if(militarAtual != null) {
+          if(validarCampos()) {
+              copyCamposToMilitar(militarAtual);
+              MilitarController.alterarMilitar(militarAtual);
+          }
+      }
+    }//GEN-LAST:event_btEditarMilitarActionPerformed
+
     
     //Botão para Buscar Militar.
-    private void BtBuscarSoldadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtBuscarSoldadoActionPerformed
-        
-        Militar milit = new Militar();
-        String nome =  tfNome.getText();
-        
-        try {
-            milit = Busca.localizaMilitar(nome);
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(FrameCadastro.class.getName()).log(Level.SEVERE, null, ex);
+    private void btBuscarMilitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarMilitarActionPerformed
+        String codigoStr = tfCodigo.getText();
+        String cpf = ftfCpf.getText();
+        String rg = ftfRg.getText();
+        String estado = (String)cbEstado.getSelectedItem();
+        int tipoBusca = 0;
+        if(codigoStr.trim().equals("")) {
+            if(cpf.trim().replaceAll("[-./]","").equals("")) {
+                tipoBusca = 2;
+            }
+            else
+                tipoBusca = 1;
         }
-        ftfCodigo.setText(milit.getCodigo()+ "");
-        tfNome.setText(milit.getNome());
-        ftfCpf.setText(milit.getCpf());
-        ftfRg.setText(milit.getRg());
-        cbEstado.setSelectedItem(milit.getEstado());
-        rbMasculino.setSelected(milit.getSexo().equals("Masculino"));
-        rbFeminino.setSelected(milit.getSexo().equals("Feminino")); 
-        ftfNascimento.setText(milit.getNascimento());
-        rbCapitao.setSelected(milit.getPatente().equals("Capitão"));
-        rbCapitao.setEnabled(false);
-        rbPrimeiroTenente.setSelected(milit.getPatente().equals("PrimeiroTenente"));
-        rbPrimeiroTenente.setEnabled(false);
-        rbSegundoTenente.setSelected(milit.getPatente().equals("SegundoTenente"));
-        rbSegundoTenente.setEnabled(false);
-        rbAspirante.setSelected(milit.getPatente().equals("Aspirante"));
-        rbAspirante.setEnabled(false);
-        rbSubtenente.setSelected(milit.getPatente().equals("Subtenente"));
-        rbSubtenente.setEnabled(false);
-        rbPrimeiroSargento.setSelected(milit.getPatente().equals("PrimeiroSargento"));
-        rbPrimeiroSargento.setEnabled(false);
-        rbSegundoSargento.setSelected(milit.getPatente().equals("SegundoSargento"));
-        rbSegundoSargento.setEnabled(false);
-        rbTerceiroSargento.setSelected(milit.getPatente().equals("TerceiroSargento"));
-        rbTerceiroSargento.setEnabled(false);
-        rbCabo.setSelected(milit.getPatente().equals("Cabo"));
-        rbCabo.setEnabled(false);
-        rbSoldado.setSelected(milit.getPatente().equals("Soldado"));
-        rbSoldado.setEnabled(false);
-        ftfIdade.setText(milit.getIdade()+"");
-        chkDescascarBatatas.setSelected(milit.isDescascar());
-        chkLimparBanheiro.setSelected(milit.isLimparBanheiro());
-        chkLimparCozinha.setSelected(milit.isLimparCozinha());
-        chkCozinharAlmoco.setSelected(milit.isCozinharArmoco());
-        chkCozinharJanta.setSelected(milit.isCozinharJanta());
-        chkAlimentarCavalos.setSelected(milit.isAlimentarCavalos());
-        chkLimparEstabulos.setSelected(milit.isLimparEstabulos());
-        chkRecarregar.setSelected(milit.isRecarregarArmamento());
-        chkTrocarEncanamento.setSelected(milit.isTrocarEncanamento());
-        chkLevantarBandeira.setSelected(milit.isLevantarBandeira());
         
-        btEditar.setEnabled(true);
-        
-        
-    }//GEN-LAST:event_BtBuscarSoldadoActionPerformed
-
-    private void rbCaboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbCaboActionPerformed
-        militar.setPatente("Cabo");
-        chkDescascarBatatas.setEnabled(true);
-        chkLimparBanheiro.setEnabled(false);
-        chkLimparCozinha.setEnabled(true);
-        chkLimparEstabulos.setEnabled(true);
-        chkRecarregar.setEnabled(true);
-        chkAlimentarCavalos.setEnabled(false);
-        chkCozinharAlmoco.setEnabled(false);
-        chkCozinharJanta.setEnabled(false);
-        chkTrocarEncanamento.setEnabled(false);
-        chkLevantarBandeira.setEnabled(false);
-    }//GEN-LAST:event_rbCaboActionPerformed
-
-    private void rbTerceiroSargentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbTerceiroSargentoActionPerformed
-        militar.setPatente("TerceiroSargento");
-        chkDescascarBatatas.setEnabled(true);
-        chkLimparBanheiro.setEnabled(false);
-        chkLimparCozinha.setEnabled(true);
-        chkLimparEstabulos.setEnabled(false);
-        chkRecarregar.setEnabled(true);
-        chkAlimentarCavalos.setEnabled(true);
-        chkCozinharAlmoco.setEnabled(false);
-        chkCozinharJanta.setEnabled(false);
-        chkTrocarEncanamento.setEnabled(false);
-        chkLevantarBandeira.setEnabled(false);
-    }//GEN-LAST:event_rbTerceiroSargentoActionPerformed
-
-    private void rbSegundoSargentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbSegundoSargentoActionPerformed
-        militar.setPatente("SegundoSargento");
-        chkDescascarBatatas.setEnabled(false);
-        chkLimparBanheiro.setEnabled(false);
-        chkLimparCozinha.setEnabled(true);
-        chkLimparEstabulos.setEnabled(false);
-        chkRecarregar.setEnabled(true);
-        chkAlimentarCavalos.setEnabled(true);
-        chkCozinharAlmoco.setEnabled(false);
-        chkCozinharJanta.setEnabled(true);
-        chkTrocarEncanamento.setEnabled(false);
-        chkLevantarBandeira.setEnabled(false);
-    }//GEN-LAST:event_rbSegundoSargentoActionPerformed
-    
-    private void rbSegundoTenenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbSegundoTenenteActionPerformed
-        militar.setPatente("SegundoTenente");
-        chkDescascarBatatas.setEnabled(false);
-        chkLimparBanheiro.setEnabled(false);
-        chkLimparCozinha.setEnabled(false);
-        chkLimparEstabulos.setEnabled(false);
-        chkRecarregar.setEnabled(false);
-        chkAlimentarCavalos.setEnabled(false);
-        chkCozinharAlmoco.setEnabled(false);
-        chkCozinharJanta.setEnabled(true);
-        chkTrocarEncanamento.setEnabled(true);
-        chkLevantarBandeira.setEnabled(true);
-
-    }//GEN-LAST:event_rbSegundoTenenteActionPerformed
-
-    private void rbAspiranteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbAspiranteActionPerformed
-        militar.setPatente("Aspirante");
-        chkDescascarBatatas.setEnabled(false);
-        chkLimparBanheiro.setEnabled(false);
-        chkLimparCozinha.setEnabled(false);
-        chkLimparEstabulos.setEnabled(false);
-        chkRecarregar.setEnabled(true);
-        chkAlimentarCavalos.setEnabled(false);
-        chkCozinharAlmoco.setEnabled(true);
-        chkCozinharJanta.setEnabled(false);
-        chkTrocarEncanamento.setEnabled(true);
-        chkLevantarBandeira.setEnabled(true);
-
-    }//GEN-LAST:event_rbAspiranteActionPerformed
-
-    private void rbSubtenenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbSubtenenteActionPerformed
-        militar.setPatente("Subtenente");
-        chkDescascarBatatas.setEnabled(false);
-        chkLimparBanheiro.setEnabled(false);
-        chkLimparCozinha.setEnabled(false);
-        chkLimparEstabulos.setEnabled(false);
-        chkRecarregar.setEnabled(true);
-        chkAlimentarCavalos.setEnabled(true);
-        chkCozinharAlmoco.setEnabled(true);
-        chkCozinharJanta.setEnabled(false);
-        chkTrocarEncanamento.setEnabled(true);
-        chkLevantarBandeira.setEnabled(false);
-    }//GEN-LAST:event_rbSubtenenteActionPerformed
-    
-//Metodo para a edição de certos campos do Militar.
-    private void editarSoldado() {
-        
-        Militar solda = null;
-        
-        for (int i = 0; i < menu.sold.size(); i++) {
-            if( codigoGlobal == menu.sold.get(i).getCodigo()){
-                
-                solda = menu.sold.get(i);
-                
-             }
+        Militar militar;
+        if(tipoBusca == 0) {
+            int codigo = Utils.stringToInt(codigoStr);
+            militar = MilitarController.buscarMilitar(codigo);
         }
-        solda.setNome(tfNome.getText());
-        solda.setCodigo(Integer.parseInt(ftfCodigo.getText()));
-        solda.setIdade(Integer.parseInt(ftfIdade.getText()));
-        solda.setCpf(ftfCpf.getText());
-        solda.setRg(ftfRg.getText());
-        solda.setDescascar(chkDescascarBatatas.isSelected());
-        solda.setLimparBanheiro(chkLimparBanheiro.isSelected());
-        solda.setLimparCozinha(chkLimparCozinha.isSelected());
-        solda.setLimparEstabulos(chkLimparEstabulos.isSelected());
-        solda.setRecarregarArmamento(chkRecarregar.isSelected());
-        solda.setAlimentarCavalos(chkAlimentarCavalos.isSelected());
-        solda.setCozinharArmoco(chkCozinharAlmoco.isSelected());
-        solda.setCozinharJanta(chkCozinharJanta.isSelected());
-        solda.setTrocarEncanamento(chkTrocarEncanamento.isSelected());
-        solda.setLevantarBandeira(chkLevantarBandeira.isSelected());
-        
-        JOptionPane.showMessageDialog(null, "Soldado Alterado");
-        limparCamposFrame();
-    }
-    
-    //Botao Salvar  para que a edição seja feita chamando o metodo.
-    private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
+        else if(tipoBusca == 1)
+            militar = MilitarController.buscarMilitarCPF(cpf);
+        else
+            militar = MilitarController.buscarMilitarRG(rg,estado);
+
+        if(militar != null) {
+            setCamposFromMilitar(militar);
+
+            btEditarMilitar.setEnabled(true);
+            btExcluirMilitar.setEnabled(true);
             
-        Militar milit = new Militar();
-        milit.setCpf(ftfCpf.getText());
-        milit.setNome(tfNome.getText());
-        milit.setRg(ftfRg.getText());
-        milit.setNascimento(ftfNascimento.getText());
-        milit.setSexo(rbMasculino.isSelected()?"Masculino":"Feminino");
-        milit.setEstado((String)cbEstado.getSelectedItem());
-        milit.setIdade(Integer.parseInt(ftfIdade.getText()));
-        milit.setAlimentarCavalos(chkAlimentarCavalos.isSelected());
-        milit.setCozinharArmoco(chkCozinharAlmoco.isSelected());
-        milit.setCozinharJanta(chkCozinharJanta.isSelected());
-        milit.setDescascar(chkDescascarBatatas.isSelected());
-        milit.setLevantarBandeira(chkLevantarBandeira.isSelected());
-        milit.setLimparBanheiro(chkLimparBanheiro.isSelected());
-        milit.setLimparCozinha(chkLimparCozinha.isSelected());
-        milit.setLimparEstabulos(chkLimparEstabulos.isSelected());
-        milit.setRecarregarArmamento(chkRecarregar.isSelected());
-        milit.setTrocarEncanamento(chkTrocarEncanamento.isSelected());
-        
-        try {
-            Altera.alteraCliente(milit);
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(FrameCadastro.class.getName()).log(Level.SEVERE, null, ex);
+            militarAtual = militar;
         }
-        //-------------------------------------------------------------------------------------------
-            jbCadastrarTarefa.setEnabled(true);
-            
-            ftfCodigo.setEditable(true);
-            tfNome.setEditable(true);
-            ftfCpf.setEditable(true);
-            ftfRg.setEditable(true);
-            ftfIdade.setEnabled(true);
-            cbEstado.setEnabled(true);
-            ftfNascimento.setEditable(true);
-            rbMasculino.setEnabled(true);
-            rbFeminino.setEnabled(true);
-            rbSegundoTenente.setEnabled(true);
-            rbAspirante.setEnabled(true);
-            rbSubtenente.setEnabled(true);
-            rbSegundoSargento.setEnabled(true);
-            rbTerceiroSargento.setEnabled(true);
-            rbCabo.setEnabled(true);
-            rbSoldado.setEnabled(true);
-            btSalvar.setEnabled(false);
-            btEditar.setEnabled(false);
-            chkDescascarBatatas.setEnabled(false);
-            chkLimparBanheiro.setEnabled(false);
-            chkLimparCozinha.setEnabled(false);
-            chkLimparEstabulos.setEnabled(false);
-            chkRecarregar.setEnabled(false);
-            chkAlimentarCavalos.setEnabled(false);
-            chkCozinharAlmoco.setEnabled(false);
-            chkCozinharJanta.setEnabled(false);
-            chkTrocarEncanamento.setEnabled(false);
-            chkLevantarBandeira.setEnabled(false);
-            
-    }//GEN-LAST:event_btSalvarActionPerformed
+        else {
+            limparCampos();
+        }
+    }//GEN-LAST:event_btBuscarMilitarActionPerformed
+                
 
-    private void rbPrimeiroSargentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbPrimeiroSargentoActionPerformed
-        militar.setPatente("PrimeiroSargento");
-        chkDescascarBatatas.setEnabled(false);
-        chkLimparBanheiro.setEnabled(false);
-        chkLimparCozinha.setEnabled(false);
-        chkLimparEstabulos.setEnabled(false);
-        chkRecarregar.setEnabled(true);
-        chkAlimentarCavalos.setEnabled(true);
-        chkCozinharAlmoco.setEnabled(false);
-        chkCozinharJanta.setEnabled(true);
-        chkTrocarEncanamento.setEnabled(true);
-        chkLevantarBandeira.setEnabled(false);
-    }//GEN-LAST:event_rbPrimeiroSargentoActionPerformed
+    
+    private void btExcluirMilitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btExcluirMilitarActionPerformed
+      if(militarAtual != null) {
+          MilitarController.excluirMilitar(militarAtual);
+      }
+    }//GEN-LAST:event_btExcluirMilitarActionPerformed
 
-    private void rbPrimeiroTenenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbPrimeiroTenenteActionPerformed
-        militar.setPatente("PrimeiroTenente");
-        chkDescascarBatatas.setEnabled(false);
-        chkLimparBanheiro.setEnabled(false);
-        chkLimparCozinha.setEnabled(false);
-        chkLimparEstabulos.setEnabled(false);
-        chkRecarregar.setEnabled(false);
-        chkAlimentarCavalos.setEnabled(false);
-        chkCozinharAlmoco.setEnabled(false);
-        chkCozinharJanta.setEnabled(true);
-        chkTrocarEncanamento.setEnabled(false);
-        chkLevantarBandeira.setEnabled(true);
-    }//GEN-LAST:event_rbPrimeiroTenenteActionPerformed
+    private void rbSoldadoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbSoldadoItemStateChanged
+        if(evt.getStateChange() == ItemEvent.SELECTED) {
+            limparTarefas();
+            chkDescascarBatatas.setEnabled(true);
+            chkLimparBanheiro.setEnabled(true);
+            chkLimparCozinha.setEnabled(true);
+            chkLimparEstabulos.setEnabled(true);
+        }
+    }//GEN-LAST:event_rbSoldadoItemStateChanged
 
-    private void rbCapitaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbCapitaoActionPerformed
-        militar.setPatente("Capitao");
-        chkDescascarBatatas.setEnabled(false);
-        chkLimparBanheiro.setEnabled(false);
-        chkLimparCozinha.setEnabled(false);
-        chkLimparEstabulos.setEnabled(false);
-        chkRecarregar.setEnabled(false);
-        chkAlimentarCavalos.setEnabled(false);
-        chkCozinharAlmoco.setEnabled(false);
-        chkCozinharJanta.setEnabled(false);
-        chkTrocarEncanamento.setEnabled(false);
-        chkLevantarBandeira.setEnabled(true);
-    }//GEN-LAST:event_rbCapitaoActionPerformed
-    
-    
-    
-     //Buscar Militar Pelo Nome
-     private Militar buscarSoldadoNome(String nome){
-        Militar so = null;
-        for(int i=0;i<menu.sold.size();i++){
-            if(nome.equals(menu.sold.get(i).getNome())){
-                System.out.println("Soldado: "+menu.sold.get(i).getNome());
-                so = menu.sold.get(i);
-            }
+    private void rbCaboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbCaboItemStateChanged
+        if(evt.getStateChange() == ItemEvent.SELECTED) {
+            limparTarefas();
+            chkDescascarBatatas.setEnabled(true);
+            chkLimparCozinha.setEnabled(true);
+            chkLimparEstabulos.setEnabled(true);
+            chkRecarregar.setEnabled(true);
         }
-        if(so==null){
-                JOptionPane.showMessageDialog(null,"Soldado não encontrado.");
-        }
-        return so;
-    }
-        /* private void excluirSoldadoArray(String nome){
-        Militar militar = null;
-        for(int i=0;i<sold.size();i++){
-            if(nome.equals(milit.get(i).getNome())){
-                System.out.println("Militar: "+milit.get(i).getNome());
-                milit.get(i).setLimparCozinha(false);
-                milit.get(i).setAlimentarCavalos(false);
-                
-                milit.remove(chkDescascarBatatas);
-                milit.remove(chkLimparBanheiro);
-                milit.remove(chkLimparCozinha);
-                milit.remove(chkLimparEstabulos);
-                milit.remove(chkRecarregar);
-                milit.remove(chkCozinharAlmoco);
-                milit.remove(chkCozinharJanta);
-                milit.remove(chkTrocarEncanamento);
-                milit.remove(chkLevantarBandeira);
-                
-                
-                
-                
-                JOptionPane.showMessageDialog(null,"tarefa excluido com sucesso!");
-            }
-        }
-        if(militar == null){
-                JOptionPane.showMessageDialog(null,"Cliente não encontrado.");
-        }
-    }
-    */
-   
+    }//GEN-LAST:event_rbCaboItemStateChanged
 
-//limpa os campos de  cadastro 
-    
-    public void limparCamposFrame(){
-        ftfCodigo.setText("");  
-        tfNome.setText("");
-        ftfCpf.setText("");
-        ftfRg.setText("");
-        ftfNascimento.setText("");
-        ftfIdade.setText("");
-        cbEstado.setSelectedIndex(-1);
-        buttonGroup2.clearSelection();
-        buttonGroup1.clearSelection();
-        chkDescascarBatatas.setSelected(false);
-        chkLimparBanheiro.setSelected(false);
-        chkLimparCozinha.setSelected(false);
-        chkLimparEstabulos.setSelected(false);
-        chkRecarregar.setSelected(false);
-        chkAlimentarCavalos.setSelected(false);
-        chkCozinharAlmoco.setSelected(false);
-        chkCozinharJanta.setSelected(false);
-        chkTrocarEncanamento.setSelected(false);
-        chkLevantarBandeira.setSelected(false);
-                
-    }
-    
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrameCadastro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrameCadastro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrameCadastro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrameCadastro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    private void rbTerceiroSargentoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbTerceiroSargentoItemStateChanged
+        if(evt.getStateChange() == ItemEvent.SELECTED) {
+            limparTarefas();
+            chkDescascarBatatas.setEnabled(true);
+            chkLimparCozinha.setEnabled(true);
+            chkRecarregar.setEnabled(true);
+            chkAlimentarCavalos.setEnabled(true);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
+    }//GEN-LAST:event_rbTerceiroSargentoItemStateChanged
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrameCadastro().setVisible(true);
-            }
-        });
-    }
+    private void rbSegundoSargentoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbSegundoSargentoItemStateChanged
+        if(evt.getStateChange() == ItemEvent.SELECTED) {
+            limparTarefas();
+            chkLimparCozinha.setEnabled(true);
+            chkRecarregar.setEnabled(true);
+            chkAlimentarCavalos.setEnabled(true);
+            chkCozinharJanta.setEnabled(true);
+        }
+    }//GEN-LAST:event_rbSegundoSargentoItemStateChanged
+
+    private void rbPrimeiroSargentoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbPrimeiroSargentoItemStateChanged
+        if(evt.getStateChange() == ItemEvent.SELECTED) {
+            limparTarefas();
+            chkRecarregar.setEnabled(true);
+            chkAlimentarCavalos.setEnabled(true);
+            chkCozinharJanta.setEnabled(true);
+            chkTrocarEncanamento.setEnabled(true);
+        }
+    }//GEN-LAST:event_rbPrimeiroSargentoItemStateChanged
+
+    private void rbSubtenenteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbSubtenenteItemStateChanged
+        if(evt.getStateChange() == ItemEvent.SELECTED) {
+            limparTarefas();
+            chkRecarregar.setEnabled(true);
+            chkAlimentarCavalos.setEnabled(true);
+            chkCozinharAlmoco.setEnabled(true);
+            chkTrocarEncanamento.setEnabled(true);
+        }
+    }//GEN-LAST:event_rbSubtenenteItemStateChanged
+
+    private void rbAspiranteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbAspiranteItemStateChanged
+        if(evt.getStateChange() == ItemEvent.SELECTED) {
+            limparTarefas();
+            chkRecarregar.setEnabled(true);
+            chkCozinharAlmoco.setEnabled(true);
+            chkTrocarEncanamento.setEnabled(true);
+            chkLevantarBandeira.setEnabled(true);
+        }
+    }//GEN-LAST:event_rbAspiranteItemStateChanged
+
+    private void rbSegundoTenenteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbSegundoTenenteItemStateChanged
+        if(evt.getStateChange() == ItemEvent.SELECTED) {
+            limparTarefas();
+            chkCozinharJanta.setEnabled(true);
+            chkTrocarEncanamento.setEnabled(true);
+            chkLevantarBandeira.setEnabled(true);
+        }
+    }//GEN-LAST:event_rbSegundoTenenteItemStateChanged
+
+    private void rbPrimeiroTenenteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbPrimeiroTenenteItemStateChanged
+        if(evt.getStateChange() == ItemEvent.SELECTED) {
+            limparTarefas();
+            chkCozinharJanta.setEnabled(true);
+            chkLevantarBandeira.setEnabled(true);
+        }
+    }//GEN-LAST:event_rbPrimeiroTenenteItemStateChanged
+
+    private void rbCapitaoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbCapitaoItemStateChanged
+        if(evt.getStateChange() == ItemEvent.SELECTED) {
+            limparTarefas();
+            chkLevantarBandeira.setEnabled(true);
+        }
+    }//GEN-LAST:event_rbCapitaoItemStateChanged
+
+    private void ftfNascimentoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftfNascimentoFocusLost
+        updateCampoIdade();
+    }//GEN-LAST:event_ftfNascimentoFocusLost
+
+    private void tfIdadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfIdadeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfIdadeActionPerformed
+
+    private void rbSoldadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbSoldadoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rbSoldadoActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BtBuscarSoldado;
-    private javax.swing.JPanel JpDadosMilitar;
     private javax.swing.JLabel LbCodigo;
     private javax.swing.JLabel LbCpf;
     private javax.swing.JLabel LbEstado;
@@ -1211,8 +940,10 @@ public class FrameCadastro extends javax.swing.JFrame {
     private javax.swing.JLabel LbRg;
     private javax.swing.JLabel LbSexo;
     private javax.swing.JLabel LbSexo1;
-    private javax.swing.JButton btEditar;
-    private javax.swing.JButton btSalvar;
+    private javax.swing.JButton btBuscarMilitar;
+    private javax.swing.JButton btCadastrarMilitar;
+    private javax.swing.JButton btEditarMilitar;
+    private javax.swing.JButton btExcluirMilitar;
     private javax.swing.JButton btVoltar;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
@@ -1227,14 +958,9 @@ public class FrameCadastro extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkLimparEstabulos;
     private javax.swing.JCheckBox chkRecarregar;
     private javax.swing.JCheckBox chkTrocarEncanamento;
-    private javax.swing.JFormattedTextField ftfCodigo;
     private javax.swing.JFormattedTextField ftfCpf;
-    private javax.swing.JFormattedTextField ftfIdade;
     private javax.swing.JFormattedTextField ftfNascimento;
     private javax.swing.JFormattedTextField ftfRg;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JButton jbCadastrarTarefa;
     private javax.swing.JLabel lbAspirante;
     private javax.swing.JLabel lbCabo;
     private javax.swing.JLabel lbCapitao;
@@ -1245,6 +971,9 @@ public class FrameCadastro extends javax.swing.JFrame {
     private javax.swing.JLabel lbSoldado;
     private javax.swing.JLabel lbSubtenente;
     private javax.swing.JLabel lbTerceiroSargento;
+    private javax.swing.JPanel panelDadosMilitar;
+    private javax.swing.JPanel panelOpcoes;
+    private javax.swing.JPanel panelTarefas;
     private javax.swing.JRadioButton rbAspirante;
     private javax.swing.JRadioButton rbCabo;
     private javax.swing.JRadioButton rbCapitao;
@@ -1257,6 +986,8 @@ public class FrameCadastro extends javax.swing.JFrame {
     private javax.swing.JRadioButton rbSoldado;
     private javax.swing.JRadioButton rbSubtenente;
     private javax.swing.JRadioButton rbTerceiroSargento;
+    private javax.swing.JTextField tfCodigo;
+    private javax.swing.JTextField tfIdade;
     private javax.swing.JTextField tfNome;
     // End of variables declaration//GEN-END:variables
 }
