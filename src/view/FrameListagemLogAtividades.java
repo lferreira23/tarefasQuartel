@@ -25,7 +25,7 @@ public class FrameListagemLogAtividades extends javax.swing.JFrame {
             tableModel.addRow(new Object[]{
                 Utils.dateToString(log.getData()),
                 log.realizouAtividades() ? "Sim" : "Não",
-                log.realizouAtividades() ? "-" : ("" + log.getGrauPenalidade() + " - " + EnumPenalidade.values()[log.getGrauPenalidade()].getNome())
+                log.realizouAtividades() ? "-" : ("" + log.getGrauPenalidade() + " - " + EnumPenalidade.values()[log.getGrauPenalidade()-1].getNome())
             });
         }
     }

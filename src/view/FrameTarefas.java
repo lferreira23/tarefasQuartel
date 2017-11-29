@@ -502,6 +502,11 @@ public class FrameTarefas extends javax.swing.JFrame {
                 rbAtividadeNaoItemStateChanged(evt);
             }
         });
+        rbAtividadeNao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbAtividadeNaoActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Cumpriu todas as atividades do dia?");
 
@@ -607,8 +612,8 @@ public class FrameTarefas extends javax.swing.JFrame {
     private void btConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConfirmarActionPerformed
         if(militarAtual != null) {
             String dataStr = ftfAtividadeData.getText();
-            if(dataStr.trim().equals("")) {
-                JOptionPane.showMessageDialog(null, "A data de confirmação da atividade deve ser preenchida.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            if(dataStr.replaceAll("[-./ ]","").equals("")) {
+                JOptionPane.showMessageDialog(null, "A data de execução da atividade deve ser preenchida.", "Aviso", JOptionPane.WARNING_MESSAGE);
                 return;
             }
             Date data = Utils.stringToDate(dataStr);
@@ -618,7 +623,7 @@ public class FrameTarefas extends javax.swing.JFrame {
             ftfAtividadeData.setText("");
             buttonGroupExecutouAtividades.clearSelection();
             if(militarAtual.getGrauPenalidade() > 0) {
-                rbPenalidades.get(militarAtual.getGrauPenalidade()-1).setSelected(rootPaneCheckingEnabled);
+                rbPenalidades.get(militarAtual.getGrauPenalidade()-1).setSelected(true);
             }
             else {
                 buttonGroupPenalidades.clearSelection();
@@ -758,6 +763,10 @@ public class FrameTarefas extends javax.swing.JFrame {
     private void rbRepreensaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbRepreensaoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_rbRepreensaoActionPerformed
+
+    private void rbAtividadeNaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbAtividadeNaoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rbAtividadeNaoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtBuscarMilitar;

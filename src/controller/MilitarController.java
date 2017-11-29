@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import model.EnumPenalidade;
 import model.Militar;
 import model.LogAtividade;
 
@@ -118,7 +119,7 @@ public class MilitarController {
     
     public static boolean logExecucaoAtividade(Militar militar, boolean atividadesRealizadas, int grauPenalidade, Date data) {
         if(!atividadesRealizadas) {
-            if(grauPenalidade > 9) {
+            if(grauPenalidade >= EnumPenalidade.getCount()) {
                 JOptionPane.showMessageDialog(null,"Penalidade máxima já atribuída para este militar","Aviso",JOptionPane.WARNING_MESSAGE);
                 return false;
             }

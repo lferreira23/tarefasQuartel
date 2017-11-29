@@ -31,5 +31,4 @@ public enum EnumPenalidade {
         return nome[this.ordinal()];
     }
     
-
 }
