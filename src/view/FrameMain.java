@@ -35,6 +35,7 @@ public class FrameMain extends javax.swing.JFrame {
         jmListar = new javax.swing.JMenuItem();
         jmSair = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Gestão de Militares e Tarefas do Quartel");
@@ -107,6 +108,15 @@ public class FrameMain extends javax.swing.JFrame {
         jMenuBar1.add(jmMilitar);
 
         jMenu2.setText("Sobre");
+
+        jMenuItem1.setText("Sobre o software");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem1);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -151,9 +161,15 @@ public class FrameMain extends javax.swing.JFrame {
        frameListagem.setVisible(true);
     }//GEN-LAST:event_jmListarActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        FrameSobreSoftware frameSobreSoftware = new FrameSobreSoftware();
+        frameSobreSoftware.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JMenuItem jmBuscar;
     private javax.swing.JMenuItem jmCadastrar;

@@ -785,7 +785,7 @@ public class FrameCadastro extends javax.swing.JFrame {
         String estado = (String)cbEstado.getSelectedItem();
         int tipoBusca = 0;
         if(codigoStr.trim().equals("")) {
-            if(cpf.trim().replaceAll("[-./]","").equals("")) {
+            if(cpf.replaceAll("[-./ ]","").equals("")) {
                 tipoBusca = 2;
             }
             else

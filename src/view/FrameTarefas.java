@@ -683,7 +683,7 @@ public class FrameTarefas extends javax.swing.JFrame {
 
         int tipoBusca = 0;
         if(codigoStr.trim().equals("")) {
-            if(cpf.trim().replaceAll("[-./]","").equals("")) {
+            if(cpf.replaceAll("[-./ ]","").equals("")) {
                 tipoBusca = 2;
             }
             else
